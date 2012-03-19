@@ -96,8 +96,6 @@ function main() {
          //$('.commentaries .item .body').each(function(){var txt = $(this).html();spacesForTags(txt);});
          //$('.comment_user_text').each(function(){var txt = $(this).html();spacesForTags(txt);});
          $('.comment_user_text div.offtopic').css({'background-color':'#EDEDED','border':'1px solid #CDCDCD','color':'#ADADAD','padding':'2px'}).removeClass('offtopic');
-         $('.comment_update .button_send').css({'background-position':'0 -30px','color':'#FFFFFF', 'cursor':'pointer'});
-         $('.comment_update .button_cancel').css({'cursor':'pointer'});
      });
 
           const ourCommunityPic_1='http://www.gametech.ru/userpics/11097/upload/editor_buttons.png';
@@ -118,6 +116,8 @@ function main() {
              $('.comment_update .tb_href').attr('onclick',"window.ixbtstyleSJ(4, 'commentUpd');");
              $('.comment_update').parent('div').parent('div').find('#url_c').find('input[name="confirm"]').attr('onclick',"window.check_url_tagSJ('commentUpd');");
              $('.comment_update').parent('div').parent('div').find('#url_c').find('input[name="cancle"]').attr('onclick',"window.close_url_tagSJ('commentUpd');");
+             $('.comment_update .button_send').css({'background-position':'0 -30px','color':'#FFFFFF', 'cursor':'pointer'});
+             $('.comment_update .button_cancel').css({'cursor':'pointer'});
         }
     });
  }
