@@ -69,6 +69,9 @@ function main() {
      
      $('.news_shortlist a').css({'font-size':'12px'});
      $('.right_block_content div.item a, .right_block_content h3 a').css({'font-size':'12px'});
+     
+     /* spoiler div styles*/
+     $('div.spoiler').css({'font-size':'12px'});
      $('div#comments_block_place').live('DOMNodeInserted', function(){
          $('.news_list .commentaries .item').css('font-size', '14px');
          $('.news_list .commentaries .item .clear').css({'border': 'none'});
@@ -85,6 +88,9 @@ function main() {
          //$('.comment_user_text').each(function(){var txt = $(this).html();spacesForTags(txt);});
          
          $('.news_list .commentaries .item div.spoiler').css('background', '#F9FBFB');
+         
+         /* spoiler div styles*/
+         $('div.spoiler').css({'font-size':'12px'});
      });
      
      $('div#popuper_message_field').live('DOMNodeInserted', function(){
