@@ -96,6 +96,8 @@ function main() {
          //$('.commentaries .item .body').each(function(){var txt = $(this).html();spacesForTags(txt);});
          //$('.comment_user_text').each(function(){var txt = $(this).html();spacesForTags(txt);});
          $('.comment_user_text div.offtopic').css({'background-color':'#EDEDED','border':'1px solid #CDCDCD','color':'#ADADAD','padding':'2px'}).removeClass('offtopic');
+         $('.comment_update .button_send').css({'background-position':'0 -30px','color':'#FFFFFF', 'cursor':'pointer'});
+         $('.comment_update .button_cancel').css({'cursor':'pointer'});
      });
 
           const ourCommunityPic_1='http://www.gametech.ru/userpics/11097/upload/editor_buttons.png';
