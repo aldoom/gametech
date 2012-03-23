@@ -5,7 +5,7 @@
 // @include     http://www.gametech.ru/*
 // @author       Erik Vergobbi Vold & Tyler G. Hicks-Wright & pigForHomer & SamuraiJackGT
 // @description  PigForHomer&SamuraiJack: Делаем gametech удобнее
-// @version     3.8
+// @version     3.9
 // ==/UserScript==
 
 function addJQuery(callback) {
@@ -20,6 +20,50 @@ function addJQuery(callback) {
 }
 
 function main() {
+    /* last comment in our news table*/
+    window.lastCommentsShow = function(onNewsPage) {
+        $('table.news_shortlist a, div.news_list .item h3 a').each(function(){
+            var self = $(this);
+            var newsId = self.attr('href');
+            if (newsId.indexOf("comments_block") == -1) {
+                newsId = newsId.match(/\d+/gi);
+                newsId = newsId[0];
+                $.post(
+                    'http://www.gametech.ru/cgi-bin/comments.pl',
+                    {
+                        action : 'ajax',
+                        id : newsId,
+                        option : 'news',
+                        sub_option : 'refresh'
+                    },
+                    function(res){
+                        if(res.status == 'ok') {
+                            var lastComment = $(res.content).find('.commentaries .item:first');
+                            var userName = lastComment.find('a.username');
+                            userName.find('img').remove();
+                            userName = userName.html();
+                            if (userName != null) {
+                                if (onNewsPage) {
+                                    var commentTime = lastComment.find('span.date').html();
+
+                                    var commentString = '<span style="display:block;color:#5D5D5D;">Последний комментарий от '+userName+' '+commentTime+'</span>';
+                                    self.parents('.item').append(commentString);
+                                } else {
+                                    var commentTime = lastComment.find('span.date').html();
+                                    commentTime = commentTime.substr((commentTime.indexOf(',')+1));
+
+                                    var commentString = '<span style="display:block;color:#5D5D5D;">'+userName+''+commentTime+'</span>';
+                                    self.parent('td').append(commentString);
+                                }
+                            }
+                        }
+                    },
+                    'json'
+                );
+            }
+        });
+    }
+    
  if (!(window.location=='http://www.gametech.ru/')){
     var ourTableShortList=$('table.news_shortlist');
     var ourBanner=$('div.right_col div.banner_240x400')[0];
@@ -118,13 +162,21 @@ function main() {
              $('.comment_update').parent('div').parent('div').find('#url_c').find('input[name="cancle"]').attr('onclick',"window.close_url_tagSJ('commentUpd');");
         }
     });
+    
+    window.lastCommentsShow();
  }
  else {
      $('div.g960').css({'background': '#F9FBFB','font-family':'Verdana','font-size':'12px'});
-     $('div.left_col table.news_shortlist').load('http://www.gametech.ru/news/26889/ table.news_shortlist>tbody');
+     $('div.left_col table.news_shortlist').load('http://www.gametech.ru/news/26889/ table.news_shortlist>tbody', function(res){
+         window.lastCommentsShow();
+     });
      $('div.more_news').remove();
      $('div.breadcrumbs').remove();
-     $('div.news_block').css('margin','0 0 0 0')
+     $('div.news_block').css('margin','0 0 0 0');
+ }
+ 
+ if (window.location.pathname == '/news/') {
+     window.lastCommentsShow(true);
  }
 
     /* функции для правильной работы вставки линки в редактировани комментария */
