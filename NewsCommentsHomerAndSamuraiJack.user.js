@@ -113,6 +113,9 @@ function main() {
      
      $('.news_shortlist a').css({'font-size':'12px'});
      $('.right_block_content div.item a, .right_block_content h3 a').css({'font-size':'12px'});
+     
+     /* spoiler div styles*/
+     $('div.spoiler').css({'font-size':'12px'});
      $('div#comments_block_place').live('DOMNodeInserted', function(){
          $('.news_list .commentaries .item').css('font-size', '14px');
          $('.news_list .commentaries .item .clear').css({'border': 'none'});
@@ -129,6 +132,9 @@ function main() {
          //$('.comment_user_text').each(function(){var txt = $(this).html();spacesForTags(txt);});
          
          $('.news_list .commentaries .item div.spoiler').css('background', '#F9FBFB');
+         
+         /* spoiler div styles*/
+         $('div.spoiler').css({'font-size':'12px'});
      });
      
      $('div#popuper_message_field').live('DOMNodeInserted', function(){
@@ -160,6 +166,8 @@ function main() {
              $('.comment_update .tb_href').attr('onclick',"window.ixbtstyleSJ(4, 'commentUpd');");
              $('.comment_update').parent('div').parent('div').find('#url_c').find('input[name="confirm"]').attr('onclick',"window.check_url_tagSJ('commentUpd');");
              $('.comment_update').parent('div').parent('div').find('#url_c').find('input[name="cancle"]').attr('onclick',"window.close_url_tagSJ('commentUpd');");
+             $('.comment_update .button_send').css({'background-position':'0 -30px','color':'#FFFFFF', 'cursor':'pointer'});
+             $('.comment_update .button_cancel').css({'cursor':'pointer'});
         }
     });
     
