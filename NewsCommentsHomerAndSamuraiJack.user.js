@@ -66,9 +66,10 @@ function main() {
     
  if (!(window.location=='http://www.gametech.ru/')){
     var ourTableShortList=$('table.news_shortlist');
-    var ourBanner=$('div.right_col div.banner_240x400')[0];
-     $('h2.news').insertBefore(ourBanner);
-     ourTableShortList.insertBefore(ourBanner);
+    var startPositionForRightNews=$('div.partners_blocks')[0];
+    $('#ri_reviews').insertAfter(startPositionForRightNews);
+    ourTableShortList.insertAfter(startPositionForRightNews);
+    $('h2.news').css({'color':'#487099', 'text-decoration':'underline'}).insertAfter(startPositionForRightNews);
     ourTableShortList.find('tr td:first-child').remove();
         var linkInTableTd=ourTableShortList.find('tr td a');
         for(var i=0;i<linkInTableTd.length;i++){
@@ -82,7 +83,6 @@ function main() {
         for(var j=0;j<spanInTableTd.length;j++){
             spanInTableTd[j].setAttribute('style','padding:0px');
         }
-    $('#ri_reviews').insertBefore(ourBanner);
 
     function spacesForTags(txt){
         txt.replace("<b>", " <b>");
