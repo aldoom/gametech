@@ -66,7 +66,7 @@ function main() {
     
  if (!(window.location=='http://www.gametech.ru/')){
     var ourTableShortList=$('table.news_shortlist');
-    var startPositionForRightNews=$('div.partners_blocks')[0];
+    var startPositionForRightNews=$('div.user_logined_block')[0] || $('div.auth_actions')[0];
     $('#ri_reviews').insertAfter(startPositionForRightNews);
     ourTableShortList.insertAfter(startPositionForRightNews);
     $('h2.news').css({'color':'#487099', 'text-decoration':'underline'}).insertAfter(startPositionForRightNews);
