@@ -93,6 +93,23 @@ function main() {
         txt.replace("</noindex>", "<noindex> ");
     };
 
+  var OurCommunityComment=function(){
+    var backgroundCommentBodyGradient={
+        'backgroundMoz': '-moz-linear-gradient(left,  #ffffff 0%, #ffffff 46%, #bacddd 100%)',
+        'backgroundWK1': '-webkit-gradient(linear, left top, right top, color-stop(0%,#ffffff), color-stop(46%,#ffffff), color-stop(100%,#bacddd))',
+        'backgroundWK2': '-webkit-linear-gradient(left,  #ffffff 0%,#ffffff 46%,#bacddd 100%)',
+        'backgroundO': '-o-linear-gradient(left,  #ffffff 0%,#ffffff 46%,#bacddd 100%)',
+        'backgroundW3c': 'linear-gradient(left,  #ffffff 0%,#ffffff 46%,#bacddd 100%)'
+    };
+    for (var ourBackground in backgroundCommentBodyGradient){
+        $('.commentaries .item .body').css('background',backgroundCommentBodyGradient[ourBackground]);
+    }
+    $('.commentaries .item .body').css('border-radius','3px');
+    $('.commentaries .item .head').css({'height': '20px','background':'#eaf2f9','margin': '25px 0 25px 0'});
+    $('.commentaries .item .head .userpic').css({'background':'#eaf2f9','width':'50px','height':'50px', 'top': '-20px', 'padding':'3px','borderRadius':'3px','border':'1px solid #dbe7ef'});
+  }
+    OurCommunityComment();
+
 
     $('.news_list .item').css('font-size', '14px');
     $('.news_list .item h3').css({'font-size':'17px','font-weight':'bold'});
@@ -102,8 +119,6 @@ function main() {
      $('.news_list .item div.offtopic').css({'font-size': '12px !important'});
      $('.news_list .item div.offtopic .reply, .news_list .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'border': 'none !important'});
      $('.news_list .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'color':'#444444'});
-     $('.commentaries .item .head').css({'height': '20px','background':'#dbe7ef','margin': '25px 0 25px 0'});
-     $('.commentaries .item .head .userpic').css({'background':'#dbe7ef','width':'50px','height':'50px', 'top': '-20px', 'padding':'3px','borderRadius':'3px','border':'1px solid #dbe7ef'});
      $('.commentaries .item .head .username').css({'padding-left':'60px','display':'inline-block','padding-top':'0px'});
      $('.commentaries .item .body .reply').css({'margin':'0px','borderRadius':'3px'});
      $('div.offtopic').css({'background-color':'#EDEDED','border':'1px solid #CDCDCD','color':'#ADADAD','padding':'2px'}).removeClass('offtopic');
@@ -117,13 +132,12 @@ function main() {
      /* spoiler div styles*/
      $('div.spoiler').css({'font-size':'12px'});
      $('div#comments_block_place').live('DOMNodeInserted', function(){
+         OurCommunityComment();
          $('.news_list .commentaries .item').css('font-size', '14px');
          $('.news_list .commentaries .item .clear').css({'border': 'none'});
          $('.news_list .commentaries .item div.offtopic').css({'font-size': '12px !important'});
          $('.news_list .commentaries .item div.offtopic .reply, .news_list .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'border': 'none !important'});
          $('.news_list .commentaries .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'color':'#444444'});
-         $('.commentaries .item .head').css({'height': '20px','background':'#dbe7ef','margin': '25px 0 25px 0'});
-         $('.commentaries .item .head .userpic').css({'background':'#dbe7ef','width':'50px','height':'50px', 'top': '-20px', 'padding':'3px','borderRadius':'3px','border':'1px solid #dbe7ef'});
          $('.commentaries .item .head .username').css({'padding-left':'60px','display':'inline-block','padding-top':'0px'});
          $('.commentaries .item .body .reply').css({'margin':'0px','borderRadius':'3px'});
          $('.news_list .commentaries .item div.offtopic').css({'background-color':'#EDEDED','border':'1px solid #CDCDCD','color':'#ADADAD','padding':'2px'}).removeClass('offtopic');
