@@ -375,7 +375,7 @@ function main() {
     } )();
     
     gtnamespace.theme = ( function() {
-        var constructor, defaultTheme = {
+        var composeSelect, getStoredThemes, getAllThemes, constructor, defaultTheme = {
             name: 'Theme Default',
             fontFamily: 'Verdana',
             commentBodyGradient: true,
@@ -389,7 +389,57 @@ function main() {
             commentBodyColorStart: '#FFFFFF',
             commentBodyColorEnd: '#EAF2F9'
         },
-        cookieCurrentTheme = 'gt-current-theme';
+        cookieCurrentTheme = 'gt-current-theme',
+        cookieStoredThemes = 'gt-stored-themes';
+        
+        composeSelect = function(name, options, selected) {
+            var selectBox = $('<select name="'+name+'" id="'+name+'"></select>');
+            
+            for (var i = 0, len = options.length; i < len; ++i) {
+                var o = options[i];
+                var selectedAttr = '';
+                var optionValue, optionText;
+                if (typeof o.value != 'undefined') {
+                    optionValue = o.value;
+                } else if (typeof o.name != 'undefined') {
+                    optionValue = o.name;
+                }
+                
+                if (typeof o.text != 'undefined') {
+                    optionText = o.text;
+                } else if (typeof o.name != 'undefined') {
+                    optionText = o.name;
+                }
+                
+                if (selected == optionValue) {
+                    selectedAttr = ' selected="selected"';
+                }
+                selectBox.append('<option value="'+optionValue+'"'+selectedAttr+'>'+optionText+'</option>');
+            }
+            
+            return selectBox;
+        };
+        
+        getStoredThemes = function() {
+            var storedThemes = gtnamespace.cookies.get(cookieStoredThemes);
+            return storedThemes;
+        };
+        
+        getAllThemes = function() {
+            var returnArray = [];
+            var storedThemes = getStoredThemes();
+            if (storedThemes == null) {
+                storedThemes = [];
+            }
+            
+            returnArray.push(defaultTheme);
+            returnArray.push(SJTheme);
+            for (i = 0; i < storedThemes.length; i++) {
+                returnArray.push(storedThemes[i]);
+            }
+            
+            return returnArray;
+        }
         
         constructor = function(){};
         
@@ -418,19 +468,25 @@ function main() {
 </div>
 */
             var currentTheme = this.getCurrentTheme();
+            var allThemes = getAllThemes();
+
             var userThemeBlock = $('<div class="user_theme_block"></div>');
             var startPositionForThemeBlock=$('div.user_logined_block')[0] || $('div.auth_actions')[0];
             userThemeBlock.insertAfter(startPositionForThemeBlock);
-            
+
             var headerThemeBlock = $('<div class="user_theme_current"></div>');
+            headerThemeBlock.html(currentTheme.name);
+            userThemeBlock.append(headerThemeBlock);
+            userThemeBlock.append('<div class="clear"></div>');
+
+            var settingsBlock = $('<div class="user_theme_settings"></div>');
+            settingsBlock.append(composeSelect('gt-theme',allThemes,currentTheme.name));
+            userThemeBlock.append(settingsBlock);
+            userThemeBlock.append('<div class="clear"></div>');
         };
         
+        return new constructor();
     } )();
-    
-    gtnamespace.cookies.set('property',obj1);
-    gtnamespace.cookies.set('theme-currnet','myTheme');
-    
-    console.log(gtnamespace.cookies.get());
     
     /* our styles */
     var styles = $('<style type="text/css" />').appendTo('head');
@@ -618,6 +674,10 @@ function main() {
  if (window.location.pathname == '/news/') {
      window.lastCommentsShow(true);
  }
+ 
+     /* инициализация (отрисовка и пр) блока тем GT */
+     gtnamespace.theme.init();
+
 
     /* функции для правильной работы вставки линки в редактировани комментария */
     window.ixbtstyleSJ = function (bbnumber, name){
