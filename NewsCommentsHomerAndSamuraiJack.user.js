@@ -384,13 +384,14 @@ function main() {
         },
         SJTheme = {
             name: 'Theme SamuraiJack',
-            fontFamily: 'Arial,Helvetica,sans-serif',
+            fontFamily: 'Arial',
             commentBodyGradient: false,
             commentBodyColorStart: '#FFFFFF',
             commentBodyColorEnd: '#EAF2F9'
         },
         cookieCurrentTheme = 'gt-current-theme',
-        cookieStoredThemes = 'gt-stored-themes';
+        cookieStoredThemes = 'gt-stored-themes',
+        fonts = [{name:'Verdana'}, {name:'Arial'}, {name:'Tahoma'}, {name:'Helvetica'}];
         
         composeSelect = function(name, options, selected) {
             var selectBox = $('<select name="'+name+'" id="'+name+'"></select>');
@@ -476,13 +477,27 @@ function main() {
 
             var headerThemeBlock = $('<div class="user_theme_current"></div>');
             headerThemeBlock.html(currentTheme.name);
+            
             userThemeBlock.append(headerThemeBlock);
             userThemeBlock.append('<div class="clear"></div>');
 
             var settingsBlock = $('<div class="user_theme_settings"></div>');
+            settingsBlock.addClass('dnone');
             settingsBlock.append(composeSelect('gt-theme',allThemes,currentTheme.name));
             userThemeBlock.append(settingsBlock);
             userThemeBlock.append('<div class="clear"></div>');
+            
+            settingsBlock.append(composeSelect('gt-font',fonts,currentTheme.fontFamily));
+            
+            
+            /* js events */
+            $('.user_theme_block .user_theme_current').live('click', function(){
+                $(this).parent('.user_theme_block').find('.user_theme_settings').toggleClass('dnone');
+            });
+            
+            $('select[name="gt-theme"]').live('change', function(){
+                console.log($(this).val());
+            });
         };
         
         return new constructor();
@@ -490,7 +505,7 @@ function main() {
     
     /* our styles */
     var styles = $('<style type="text/css" />').appendTo('head');
-    styles.html('.user_theme_block {background: -moz-linear-gradient(center top , #F0DE39 0%, #F0DE39 2%, #F9D857 50%, #F9D650 51%, #F9D650 100%) repeat scroll 0 0 transparent;border-radius: 10px 10px 10px 10px;box-shadow: 0 0 3px 1px #F9E350 inset;margin: 0 0 1.5em;padding: 10px;position: relative;}');
+    styles.html('.user_theme_block {background: -moz-linear-gradient(center top , #F0DE39 0%, #F0DE39 2%, #F9D857 50%, #F9D650 51%, #F9D650 100%) repeat scroll 0 0 transparent;border-radius: 10px 10px 10px 10px;box-shadow: 0 0 3px 1px #F9E350 inset;margin: 0 0 1.5em;padding: 10px;position: relative;} .dnone {display:none;} .user_theme_current {font-weight: bold; cursor: pointer;}');
     
     var currentTheme = gtnamespace.theme.getCurrentTheme();
   
