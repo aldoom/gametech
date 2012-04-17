@@ -375,17 +375,17 @@ function main() {
     } )();
     
     gtnamespace.theme = ( function() {
-        var composeSelect, getStoredThemes, getAllThemes, constructor, defaultTheme = {
+        var composeSelect, getStoredThemes, getAllThemes, setStoredThemes, applySettings, constructor, defaultTheme = {
             name: 'Theme Default',
             fontFamily: 'Verdana',
-            commentBodyGradient: true,
+            commentBodyGradient: "true",
             commentBodyColorStart: '#FFFFFF',
             commentBodyColorEnd: '#BACDDD'
         },
         SJTheme = {
             name: 'Theme SamuraiJack',
             fontFamily: 'Arial',
-            commentBodyGradient: false,
+            commentBodyGradient: "false",
             commentBodyColorStart: '#FFFFFF',
             commentBodyColorEnd: '#EAF2F9'
         },
@@ -440,7 +440,77 @@ function main() {
             }
             
             return returnArray;
-        }
+        };
+        
+        setStoredThemes = function(storedThemes) {
+            gtnamespace.cookies.set(cookieStoredThemes, storedThemes);
+        };
+        
+        applySettings = function() {
+            var settingsBlock = $('.user_theme_settings');
+            
+            var themeName = settingsBlock.find('#gt-theme-name').val();
+            
+            var themeToSave = {
+                name: themeName,
+                fontFamily: settingsBlock.find('#gt-font').val(),
+                commentBodyGradient: settingsBlock.find('#gt-comments-gradient').val(),
+                commentBodyColorStart: settingsBlock.find('#gt-comments-gradient-start').val(),
+                commentBodyColorEnd: settingsBlock.find('#gt-comments-gradient-end').val()
+            };
+            
+            var isStored = false;
+            
+            if (
+                (themeName == defaultTheme.name 
+                    && (
+                        themeToSave.fontFamily != defaultTheme.fontFamily ||
+                        themeToSave.commentBodyGradient != defaultTheme.commentBodyGradient ||
+                        themeToSave.commentBodyColorStart != defaultTheme.commentBodyColorStart ||
+                        themeToSave.commentBodyColorEnd != defaultTheme.commentBodyColorEnd
+                        )
+                ) 
+                || 
+                (themeName == SJTheme.name
+                    && (
+                        themeToSave.fontFamily != SJTheme.fontFamily ||
+                        themeToSave.commentBodyGradient != SJTheme.commentBodyGradient ||
+                        themeToSave.commentBodyColorStart != SJTheme.commentBodyColorStart ||
+                        themeToSave.commentBodyColorEnd != SJTheme.commentBodyColorEnd
+                        )
+                )
+                ) {
+                themeToSave.name = themeToSave.name + ' copy';
+            } else if (themeName == defaultTheme.name || themeName == SJTheme.name) {
+                isStored = true;
+            }
+            
+            
+            var storedThemes = getStoredThemes();
+            if (storedThemes == null) {
+                storedThemes = [];
+            }
+            
+            if (!isStored) {
+                for (i = 0; i < storedThemes.length; i++) {
+                    if (storedThemes[i].name == themeToSave.name) {
+                        isStored = true;
+                        storedThemes[i] = themeToSave;
+                    }
+                }
+            }
+            
+            if (!isStored) {
+                storedThemes.push(themeToSave);
+            }
+            
+            setStoredThemes(storedThemes);
+            
+            
+            gtnamespace.cookies.set(cookieCurrentTheme, themeToSave);
+            
+            window.location.reload(true);
+        };
         
         constructor = function(){};
         
@@ -483,12 +553,27 @@ function main() {
 
             var settingsBlock = $('<div class="user_theme_settings"></div>');
             settingsBlock.addClass('dnone');
+            settingsBlock.append('<div style="font: 12px bold;">Тема</div>');
             settingsBlock.append(composeSelect('gt-theme',allThemes,currentTheme.name));
             userThemeBlock.append(settingsBlock);
             userThemeBlock.append('<div class="clear"></div>');
             
+            settingsBlock.append('<div style="font: 12px bold;">Название</div>');
+            settingsBlock.append('<input type="text" name="gt-theme-name" id="gt-theme-name" value="'+currentTheme.name+'" />');
+            
+            settingsBlock.append('<div style="font: 12px bold;">Шрифт</div>');
             settingsBlock.append(composeSelect('gt-font',fonts,currentTheme.fontFamily));
             
+            settingsBlock.append('<div style="font: 12px bold;">Градиент в комментариях</div>');
+            settingsBlock.append(composeSelect('gt-comments-gradient',[{value:"true", text:'Да'},{value:"false", text:'Нет'}],currentTheme.commentBodyGradient));
+            
+            settingsBlock.append('<div style="font: 12px bold;">Градиент, цвета слева</div>');
+            settingsBlock.append('<input type="text" name="gt-comments-gradient-start" id="gt-comments-gradient-start" value="'+currentTheme.commentBodyColorStart+'" />');
+            
+            settingsBlock.append('<div style="font: 12px bold;">Градиент, цвета справа</div>');
+            settingsBlock.append('<input type="text" name="gt-comments-gradient-end" id="gt-comments-gradient-end" value="'+currentTheme.commentBodyColorEnd+'" />');
+            
+            settingsBlock.append('<input type="button" id="gt-settings-save" value="Применить" />');
             
             /* js events */
             $('.user_theme_block .user_theme_current').live('click', function(){
@@ -496,7 +581,43 @@ function main() {
             });
             
             $('select[name="gt-theme"]').live('change', function(){
-                console.log($(this).val());
+                var allThemes = getAllThemes();
+                if (allThemes == null) {
+                    allThemes = [];
+                }
+                var currentThemeName = $(this).val();
+                var currentTheme = null;
+                for (i = 0; i < allThemes.length; i++) {
+                    if (allThemes[i].name == currentThemeName) {
+                        currentTheme = allThemes[i];
+                    }
+                }
+                
+                if (currentTheme != null) {
+                    if (typeof currentTheme.name != 'undefined') {
+                        $('.user_theme_settings #gt-theme-name').val(currentTheme.name);
+                    }
+                    
+                    if (typeof currentTheme.fontFamily != 'undefined') {
+                        $('.user_theme_settings #gt-font').val(currentTheme.fontFamily);
+                    }
+                    
+                    if (typeof currentTheme.commentBodyGradient != 'undefined') {
+                        $('.user_theme_settings #gt-comments-gradient').val(currentTheme.commentBodyGradient);
+                    }
+                    
+                    if (typeof currentTheme.commentBodyColorStart != 'undefined') {
+                        $('.user_theme_settings #gt-comments-gradient-start').val(currentTheme.commentBodyColorStart);
+                    }
+                    
+                    if (typeof currentTheme.commentBodyColorEnd != 'undefined') {
+                        $('.user_theme_settings #gt-comments-gradient-end').val(currentTheme.commentBodyColorEnd);
+                    }
+                }
+            });
+            
+            $('input#gt-settings-save').live('click', function(){
+                applySettings();
             });
         };
         
@@ -582,21 +703,25 @@ function main() {
         txt.replace("</noindex>", "<noindex> ");
     };
 
-  var OurCommunityComment=function(){
-    var backgroundCommentBodyGradient={
-        'backgroundMoz': '-moz-linear-gradient(left,  #ffffff 0%, #ffffff 46%, #bacddd 100%)',
-        'backgroundWK1': '-webkit-gradient(linear, left top, right top, color-stop(0%,#ffffff), color-stop(46%,#ffffff), color-stop(100%,#bacddd))',
-        'backgroundWK2': '-webkit-linear-gradient(left,  #ffffff 0%,#ffffff 46%,#bacddd 100%)',
-        'backgroundO': '-o-linear-gradient(left,  #ffffff 0%,#ffffff 46%,#bacddd 100%)',
-        'backgroundW3c': 'linear-gradient(left,  #ffffff 0%,#ffffff 46%,#bacddd 100%)'
-    };
-    for (var ourBackground in backgroundCommentBodyGradient){
-        $('.commentaries .item .body').css('background',backgroundCommentBodyGradient[ourBackground]);
+    var OurCommunityComment=function(){
+        if (currentTheme.commentBodyGradient == "true") {
+            var grdCS = currentTheme.commentBodyColorStart;
+            var grdCE = currentTheme.commentBodyColorEnd;
+            var backgroundCommentBodyGradient={
+                'backgroundMoz': '-moz-linear-gradient(left,  '+grdCS+' 0%, '+grdCS+' 46%, '+grdCE+' 100%)',
+                'backgroundWK1': '-webkit-gradient(linear, left top, right top, color-stop(0%,'+grdCS+'), color-stop(46%,'+grdCS+'), color-stop(100%,'+grdCE+'))',
+                'backgroundWK2': '-webkit-linear-gradient(left,  '+grdCS+' 0%,'+grdCS+' 46%,'+grdCE+' 100%)',
+                'backgroundO': '-o-linear-gradient(left,  '+grdCS+' 0%,'+grdCS+' 46%,'+grdCE+' 100%)',
+                'backgroundW3c': 'linear-gradient(left,  '+grdCS+' 0%,'+grdCS+' 46%,'+grdCE+' 100%)'
+            };
+            for (var ourBackground in backgroundCommentBodyGradient){
+                $('.commentaries .item .body').css('background',backgroundCommentBodyGradient[ourBackground]);
+            }
+        }
+        $('.commentaries .item .body').css('border-radius','3px');
+        $('.commentaries .item .head').css({'height': '20px','background':'#eaf2f9','margin': '25px 0 25px 0'});
+        $('.commentaries .item .head .userpic').css({'background':'#eaf2f9','width':'50px','height':'50px', 'top': '-20px', 'padding':'3px','borderRadius':'3px','border':'1px solid #dbe7ef'});
     }
-    $('.commentaries .item .body').css('border-radius','3px');
-    $('.commentaries .item .head').css({'height': '20px','background':'#eaf2f9','margin': '25px 0 25px 0'});
-    $('.commentaries .item .head .userpic').css({'background':'#eaf2f9','width':'50px','height':'50px', 'top': '-20px', 'padding':'3px','borderRadius':'3px','border':'1px solid #dbe7ef'});
-  }
     OurCommunityComment();
 
 
