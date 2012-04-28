@@ -375,14 +375,14 @@ function main() {
     } )();
     
     gtnamespace.theme = ( function() {
-        var composeSelect, getStoredThemes, getAllThemes, setStoredThemes, applySettings, constructor, defaultTheme = {
+        var composeSelect, getStoredThemes, getAllThemes, setStoredThemes, applySettings, checkNewFields, constructor, defaultTheme = {
             name: 'Theme Complex',
             fontFamily: 'Verdana',
             commentBodyGradient: "true",
             commentBodyColorStart: '#FFFFFF',
             commentBodyColorEnd: '#BACDDD',
-            newsTextSizeBody: '14',
             newsTextSizeHeader: '17',
+            newsTextSizeBody: '14',
             commentTextSize: '14',
             commentOfftopicTextSize: '12',
             commentSpoilerTextSize: '12'
@@ -393,8 +393,8 @@ function main() {
             commentBodyGradient: "false",
             commentBodyColorStart: '#FFFFFF',
             commentBodyColorEnd: '#EAF2F9',
-            newsTextSizeBody: '14',
             newsTextSizeHeader: '17',
+            newsTextSizeBody: '14',
             commentTextSize: '14',
             commentOfftopicTextSize: '12',
             commentSpoilerTextSize: '12'
@@ -467,8 +467,8 @@ function main() {
                 commentBodyGradient: settingsBlock.find('#gt-comments-gradient').val(),
                 commentBodyColorStart: settingsBlock.find('#gt-comments-gradient-start').val(),
                 commentBodyColorEnd: settingsBlock.find('#gt-comments-gradient-end').val(),
-                newsTextSizeBody: settingsBlock.find('#gt-news-text-size-body').val(),
                 newsTextSizeHeader: settingsBlock.find('#gt-news-text-size-header').val(),
+                newsTextSizeBody: settingsBlock.find('#gt-news-text-size-body').val(),
                 commentTextSize: settingsBlock.find('#gt-comments-text-size').val(),
                 commentOfftopicTextSize: settingsBlock.find('#gt-comments-offtopic-text-size').val(),
                 commentSpoilerTextSize: settingsBlock.find('#gt-comments-spoiler-text-size').val()
@@ -483,8 +483,8 @@ function main() {
                         themeToSave.commentBodyGradient != defaultTheme.commentBodyGradient ||
                         themeToSave.commentBodyColorStart != defaultTheme.commentBodyColorStart ||
                         themeToSave.commentBodyColorEnd != defaultTheme.commentBodyColorEnd ||
-                        themeToSave.newsTextSizeBody != defaultTheme.newsTextSizeBody ||
                         themeToSave.newsTextSizeHeader != defaultTheme.newsTextSizeHeader ||
+                        themeToSave.newsTextSizeBody != defaultTheme.newsTextSizeBody ||
                         themeToSave.commentTextSize != defaultTheme.commentTextSize ||
                         themeToSave.commentOfftopicTextSize != defaultTheme.commentOfftopicTextSize ||
                         themeToSave.commentSpoilerTextSize != defaultTheme.commentSpoilerTextSize
@@ -497,8 +497,8 @@ function main() {
                         themeToSave.commentBodyGradient != SJTheme.commentBodyGradient ||
                         themeToSave.commentBodyColorStart != SJTheme.commentBodyColorStart ||
                         themeToSave.commentBodyColorEnd != SJTheme.commentBodyColorEnd ||
-                        themeToSave.newsTextSizeBody != SJTheme.newsTextSizeBody ||
                         themeToSave.newsTextSizeHeader != SJTheme.newsTextSizeHeader ||
+                        themeToSave.newsTextSizeBody != SJTheme.newsTextSizeBody ||
                         themeToSave.commentTextSize != SJTheme.commentTextSize ||
                         themeToSave.commentOfftopicTextSize != SJTheme.commentOfftopicTextSize ||
                         themeToSave.commentSpoilerTextSize != SJTheme.commentSpoilerTextSize
@@ -537,6 +537,33 @@ function main() {
             window.location.reload(true);
         };
         
+        checkNewFields = function(theme){
+            if (theme != null) {
+                if (typeof theme.newsTextSizeHeader == 'undefined') {
+                    theme.newsTextSizeHeader = defaultTheme.newsTextSizeHeader;
+                }
+                
+                if (typeof theme.newsTextSizeBody == 'undefined') {
+                    theme.newsTextSizeBody = defaultTheme.newsTextSizeBody;
+                }
+                
+                if (typeof theme.commentTextSize == 'undefined') {
+                    theme.commentTextSize = defaultTheme.commentTextSize;
+                }
+                
+                if (typeof theme.commentOfftopicTextSize == 'undefined') {
+                    theme.commentOfftopicTextSize = defaultTheme.commentOfftopicTextSize;
+                }
+                
+                if (typeof theme.commentSpoilerTextSize == 'undefined') {
+                    theme.commentSpoilerTextSize = defaultTheme.commentSpoilerTextSize;
+                }
+            } else {
+                theme = defaultTheme;
+            }
+            return theme;
+        };
+        
         constructor = function(){};
         
         constructor.prototype.getCurrentTheme = function() {
@@ -544,6 +571,7 @@ function main() {
             if (currentTheme == null) {
                 return defaultTheme;
             } else {
+                currentTheme = checkNewFields(currentTheme);
                 return currentTheme;
             }
             
@@ -599,19 +627,19 @@ function main() {
             settingsBlock.append('<input type="text" name="gt-comments-gradient-end" id="gt-comments-gradient-end" value="'+currentTheme.commentBodyColorEnd+'" style="width:100%;" />');
             
             settingsBlock.append('<div style="font: 12px bold;">Размер шрифта заголовка новости</div>');
-            settingsBlock.append('<input type="text" name="gt-news-text-size-header" id="gt-news-text-size-header" value="'+currentTheme.newsTextSizeHeader+'" style="width:100%;" />');
+            settingsBlock.append('<input type="text" name="gt-news-text-size-header" id="gt-news-text-size-header" value="'+(typeof currentTheme.newsTextSizeHeader == 'undefined' ? defaultTheme.newsTextSizeHeader : currentTheme.newsTextSizeHeader)+'" style="width:100%;" />');
             
             settingsBlock.append('<div style="font: 12px bold;">Размер шрифта текста новости</div>');
-            settingsBlock.append('<input type="text" name="gt-news-text-size-body" id="gt-news-text-size-body" value="'+currentTheme.newsTextSizeBody+'" style="width:100%;" />');
+            settingsBlock.append('<input type="text" name="gt-news-text-size-body" id="gt-news-text-size-body" value="'+(typeof currentTheme.newsTextSizeBody == 'undefined' ? defaultTheme.newsTextSizeBody : currentTheme.newsTextSizeBody)+'" style="width:100%;" />');
             
             settingsBlock.append('<div style="font: 12px bold;">Размер шрифта текста комментария</div>');
-            settingsBlock.append('<input type="text" name="gt-comments-text-size" id="gt-comments-text-size" value="'+currentTheme.commentTextSize+'" style="width:100%;" />');
+            settingsBlock.append('<input type="text" name="gt-comments-text-size" id="gt-comments-text-size" value="'+(typeof currentTheme.commentTextSize == 'undefined' ? defaultTheme.commentTextSize : currentTheme.commentTextSize)+'" style="width:100%;" />');
             
             settingsBlock.append('<div style="font: 12px bold;">Размер шрифта оффтопика комментария</div>');
-            settingsBlock.append('<input type="text" name="gt-comments-offtopic-text-size" id="gt-comments-offtopic-text-size" value="'+currentTheme.commentOfftopicTextSize+'" style="width:100%;" />');
+            settingsBlock.append('<input type="text" name="gt-comments-offtopic-text-size" id="gt-comments-offtopic-text-size" value="'+(typeof currentTheme.commentOfftopicTextSize == 'undefined' ? defaultTheme.commentOfftopicTextSize : currentTheme.commentOfftopicTextSize)+'" style="width:100%;" />');
             
             settingsBlock.append('<div style="font: 12px bold;">Размер шрифта спойлера комментария</div>');
-            settingsBlock.append('<input type="text" name="gt-comments-spoiler-text-size" id="gt-comments-spoiler-text-size" value="'+currentTheme.commentSpoilerTextSize+'" style="width:100%;" />');
+            settingsBlock.append('<input type="text" name="gt-comments-spoiler-text-size" id="gt-comments-spoiler-text-size" value="'+(typeof currentTheme.commentSpoilerTextSize == 'undefined' ? defaultTheme.commentSpoilerTextSize : currentTheme.commentSpoilerTextSize)+'" style="width:100%;" />');
             
             settingsBlock.append('<input type="button" id="gt-settings-save" value="Применить" style="width:100%;" />');
             
