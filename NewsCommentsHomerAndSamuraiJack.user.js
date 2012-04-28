@@ -5,7 +5,7 @@
 // @include     http://www.gametech.ru/*
 // @author       Erik Vergobbi Vold & Tyler G. Hicks-Wright & pigForHomer & SamuraiJackGT
 // @description  PigForHomer&SamuraiJack: Делаем gametech удобнее
-// @version     4
+// @version     4.1
 // ==/UserScript==
 
 function addJQuery(callback) {
