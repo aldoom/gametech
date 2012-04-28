@@ -466,7 +466,12 @@ function main() {
                 fontFamily: settingsBlock.find('#gt-font').val(),
                 commentBodyGradient: settingsBlock.find('#gt-comments-gradient').val(),
                 commentBodyColorStart: settingsBlock.find('#gt-comments-gradient-start').val(),
-                commentBodyColorEnd: settingsBlock.find('#gt-comments-gradient-end').val()
+                commentBodyColorEnd: settingsBlock.find('#gt-comments-gradient-end').val(),
+                newsTextSizeBody: settingsBlock.find('#gt-news-text-size-body').val(),
+                newsTextSizeHeader: settingsBlock.find('#gt-news-text-size-header').val(),
+                commentTextSize: settingsBlock.find('#gt-comments-text-size').val(),
+                commentOfftopicTextSize: settingsBlock.find('#gt-comments-offtopic-text-size').val(),
+                commentSpoilerTextSize: settingsBlock.find('#gt-comments-spoiler-text-size').val()
             };
             
             var isStored = false;
@@ -477,7 +482,12 @@ function main() {
                         themeToSave.fontFamily != defaultTheme.fontFamily ||
                         themeToSave.commentBodyGradient != defaultTheme.commentBodyGradient ||
                         themeToSave.commentBodyColorStart != defaultTheme.commentBodyColorStart ||
-                        themeToSave.commentBodyColorEnd != defaultTheme.commentBodyColorEnd
+                        themeToSave.commentBodyColorEnd != defaultTheme.commentBodyColorEnd ||
+                        themeToSave.newsTextSizeBody != defaultTheme.newsTextSizeBody ||
+                        themeToSave.newsTextSizeHeader != defaultTheme.newsTextSizeHeader ||
+                        themeToSave.commentTextSize != defaultTheme.commentTextSize ||
+                        themeToSave.commentOfftopicTextSize != defaultTheme.commentOfftopicTextSize ||
+                        themeToSave.commentSpoilerTextSize != defaultTheme.commentSpoilerTextSize
                         )
                 ) 
                 || 
@@ -486,7 +496,12 @@ function main() {
                         themeToSave.fontFamily != SJTheme.fontFamily ||
                         themeToSave.commentBodyGradient != SJTheme.commentBodyGradient ||
                         themeToSave.commentBodyColorStart != SJTheme.commentBodyColorStart ||
-                        themeToSave.commentBodyColorEnd != SJTheme.commentBodyColorEnd
+                        themeToSave.commentBodyColorEnd != SJTheme.commentBodyColorEnd ||
+                        themeToSave.newsTextSizeBody != SJTheme.newsTextSizeBody ||
+                        themeToSave.newsTextSizeHeader != SJTheme.newsTextSizeHeader ||
+                        themeToSave.commentTextSize != SJTheme.commentTextSize ||
+                        themeToSave.commentOfftopicTextSize != SJTheme.commentOfftopicTextSize ||
+                        themeToSave.commentSpoilerTextSize != SJTheme.commentSpoilerTextSize
                         )
                 )
                 ) {
@@ -638,6 +653,27 @@ function main() {
                     if (typeof currentTheme.commentBodyColorEnd != 'undefined') {
                         $('.user_theme_settings #gt-comments-gradient-end').val(currentTheme.commentBodyColorEnd);
                     }
+                    
+                    if (typeof currentTheme.newsTextSizeHeader != 'undefined') {
+                        $('.user_theme_settings #gt-news-text-size-header').val(currentTheme.newsTextSizeHeader);
+                    }
+                    
+                    if (typeof currentTheme.newsTextSizeBody != 'undefined') {
+                        $('.user_theme_settings #gt-news-text-size-body').val(currentTheme.newsTextSizeBody);
+                    }
+                    
+                    if (typeof currentTheme.commentTextSize != 'undefined') {
+                        $('.user_theme_settings #gt-comments-text-size').val(currentTheme.commentTextSize);
+                    }
+                    
+                    if (typeof currentTheme.commentOfftopicTextSize != 'undefined') {
+                        $('.user_theme_settings #gt-comments-offtopic-text-size').val(currentTheme.commentOfftopicTextSize);
+                    }
+                    
+                    if (typeof currentTheme.commentSpoilerTextSize != 'undefined') {
+                        $('.user_theme_settings #gt-comments-spoiler-text-size').val(currentTheme.commentSpoilerTextSize);
+                    }
+                    
                 }
             });
             
