@@ -5,7 +5,7 @@
 // @include     http://www.gametech.ru/*
 // @author       Erik Vergobbi Vold & Tyler G. Hicks-Wright & pigForHomer & SamuraiJackGT
 // @description  PigForHomer&SamuraiJack: Делаем gametech удобнее
-// @version     4
+// @version     4.1
 // ==/UserScript==
 
 function addJQuery(callback) {
@@ -375,26 +375,36 @@ function main() {
     } )();
     
     gtnamespace.theme = ( function() {
-        var composeSelect, getStoredThemes, getAllThemes, setStoredThemes, applySettings, constructor, defaultTheme = {
-            name: 'Theme Default',
+        var composeSelect, getStoredThemes, getAllThemes, setStoredThemes, applySettings, checkNewFields, constructor, defaultTheme = {
+            name: 'Theme Complex',
             fontFamily: 'Verdana',
             commentBodyGradient: "true",
             commentBodyColorStart: '#FFFFFF',
-            commentBodyColorEnd: '#BACDDD'
+            commentBodyColorEnd: '#BACDDD',
+            newsTextSizeHeader: '17',
+            newsTextSizeBody: '14',
+            commentTextSize: '14',
+            commentOfftopicTextSize: '12',
+            commentSpoilerTextSize: '12'
         },
         SJTheme = {
             name: 'Theme SamuraiJack',
             fontFamily: 'Arial',
             commentBodyGradient: "false",
             commentBodyColorStart: '#FFFFFF',
-            commentBodyColorEnd: '#EAF2F9'
+            commentBodyColorEnd: '#EAF2F9',
+            newsTextSizeHeader: '17',
+            newsTextSizeBody: '14',
+            commentTextSize: '14',
+            commentOfftopicTextSize: '12',
+            commentSpoilerTextSize: '12'
         },
         cookieCurrentTheme = 'gt-current-theme',
         cookieStoredThemes = 'gt-stored-themes',
         fonts = [{name:'Verdana'}, {name:'Arial'}, {name:'Tahoma'}, {name:'Helvetica'}];
         
         composeSelect = function(name, options, selected) {
-            var selectBox = $('<select name="'+name+'" id="'+name+'"></select>');
+            var selectBox = $('<select name="'+name+'" id="'+name+'" style="width:100%;"></select>');
             
             for (var i = 0, len = options.length; i < len; ++i) {
                 var o = options[i];
@@ -456,7 +466,12 @@ function main() {
                 fontFamily: settingsBlock.find('#gt-font').val(),
                 commentBodyGradient: settingsBlock.find('#gt-comments-gradient').val(),
                 commentBodyColorStart: settingsBlock.find('#gt-comments-gradient-start').val(),
-                commentBodyColorEnd: settingsBlock.find('#gt-comments-gradient-end').val()
+                commentBodyColorEnd: settingsBlock.find('#gt-comments-gradient-end').val(),
+                newsTextSizeHeader: settingsBlock.find('#gt-news-text-size-header').val(),
+                newsTextSizeBody: settingsBlock.find('#gt-news-text-size-body').val(),
+                commentTextSize: settingsBlock.find('#gt-comments-text-size').val(),
+                commentOfftopicTextSize: settingsBlock.find('#gt-comments-offtopic-text-size').val(),
+                commentSpoilerTextSize: settingsBlock.find('#gt-comments-spoiler-text-size').val()
             };
             
             var isStored = false;
@@ -467,7 +482,12 @@ function main() {
                         themeToSave.fontFamily != defaultTheme.fontFamily ||
                         themeToSave.commentBodyGradient != defaultTheme.commentBodyGradient ||
                         themeToSave.commentBodyColorStart != defaultTheme.commentBodyColorStart ||
-                        themeToSave.commentBodyColorEnd != defaultTheme.commentBodyColorEnd
+                        themeToSave.commentBodyColorEnd != defaultTheme.commentBodyColorEnd ||
+                        themeToSave.newsTextSizeHeader != defaultTheme.newsTextSizeHeader ||
+                        themeToSave.newsTextSizeBody != defaultTheme.newsTextSizeBody ||
+                        themeToSave.commentTextSize != defaultTheme.commentTextSize ||
+                        themeToSave.commentOfftopicTextSize != defaultTheme.commentOfftopicTextSize ||
+                        themeToSave.commentSpoilerTextSize != defaultTheme.commentSpoilerTextSize
                         )
                 ) 
                 || 
@@ -476,7 +496,12 @@ function main() {
                         themeToSave.fontFamily != SJTheme.fontFamily ||
                         themeToSave.commentBodyGradient != SJTheme.commentBodyGradient ||
                         themeToSave.commentBodyColorStart != SJTheme.commentBodyColorStart ||
-                        themeToSave.commentBodyColorEnd != SJTheme.commentBodyColorEnd
+                        themeToSave.commentBodyColorEnd != SJTheme.commentBodyColorEnd ||
+                        themeToSave.newsTextSizeHeader != SJTheme.newsTextSizeHeader ||
+                        themeToSave.newsTextSizeBody != SJTheme.newsTextSizeBody ||
+                        themeToSave.commentTextSize != SJTheme.commentTextSize ||
+                        themeToSave.commentOfftopicTextSize != SJTheme.commentOfftopicTextSize ||
+                        themeToSave.commentSpoilerTextSize != SJTheme.commentSpoilerTextSize
                         )
                 )
                 ) {
@@ -512,6 +537,33 @@ function main() {
             window.location.reload(true);
         };
         
+        checkNewFields = function(theme){
+            if (theme != null) {
+                if (typeof theme.newsTextSizeHeader == 'undefined') {
+                    theme.newsTextSizeHeader = defaultTheme.newsTextSizeHeader;
+                }
+                
+                if (typeof theme.newsTextSizeBody == 'undefined') {
+                    theme.newsTextSizeBody = defaultTheme.newsTextSizeBody;
+                }
+                
+                if (typeof theme.commentTextSize == 'undefined') {
+                    theme.commentTextSize = defaultTheme.commentTextSize;
+                }
+                
+                if (typeof theme.commentOfftopicTextSize == 'undefined') {
+                    theme.commentOfftopicTextSize = defaultTheme.commentOfftopicTextSize;
+                }
+                
+                if (typeof theme.commentSpoilerTextSize == 'undefined') {
+                    theme.commentSpoilerTextSize = defaultTheme.commentSpoilerTextSize;
+                }
+            } else {
+                theme = defaultTheme;
+            }
+            return theme;
+        };
+        
         constructor = function(){};
         
         constructor.prototype.getCurrentTheme = function() {
@@ -519,6 +571,7 @@ function main() {
             if (currentTheme == null) {
                 return defaultTheme;
             } else {
+                currentTheme = checkNewFields(currentTheme);
                 return currentTheme;
             }
             
@@ -559,7 +612,7 @@ function main() {
             userThemeBlock.append('<div class="clear"></div>');
             
             settingsBlock.append('<div style="font: 12px bold;">Название</div>');
-            settingsBlock.append('<input type="text" name="gt-theme-name" id="gt-theme-name" value="'+currentTheme.name+'" />');
+            settingsBlock.append('<input type="text" name="gt-theme-name" id="gt-theme-name" value="'+currentTheme.name+'" style="width:100%;" />');
             
             settingsBlock.append('<div style="font: 12px bold;">Шрифт</div>');
             settingsBlock.append(composeSelect('gt-font',fonts,currentTheme.fontFamily));
@@ -568,12 +621,27 @@ function main() {
             settingsBlock.append(composeSelect('gt-comments-gradient',[{value:"true", text:'Да'},{value:"false", text:'Нет'}],currentTheme.commentBodyGradient));
             
             settingsBlock.append('<div style="font: 12px bold;">Градиент, цвета слева</div>');
-            settingsBlock.append('<input type="text" name="gt-comments-gradient-start" id="gt-comments-gradient-start" value="'+currentTheme.commentBodyColorStart+'" />');
+            settingsBlock.append('<input type="text" name="gt-comments-gradient-start" id="gt-comments-gradient-start" value="'+currentTheme.commentBodyColorStart+'" style="width:100%;" />');
             
             settingsBlock.append('<div style="font: 12px bold;">Градиент, цвета справа</div>');
-            settingsBlock.append('<input type="text" name="gt-comments-gradient-end" id="gt-comments-gradient-end" value="'+currentTheme.commentBodyColorEnd+'" />');
+            settingsBlock.append('<input type="text" name="gt-comments-gradient-end" id="gt-comments-gradient-end" value="'+currentTheme.commentBodyColorEnd+'" style="width:100%;" />');
             
-            settingsBlock.append('<input type="button" id="gt-settings-save" value="Применить" />');
+            settingsBlock.append('<div style="font: 12px bold;">Размер шрифта заголовка новости</div>');
+            settingsBlock.append('<input type="text" name="gt-news-text-size-header" id="gt-news-text-size-header" value="'+(typeof currentTheme.newsTextSizeHeader == 'undefined' ? defaultTheme.newsTextSizeHeader : currentTheme.newsTextSizeHeader)+'" style="width:100%;" />');
+            
+            settingsBlock.append('<div style="font: 12px bold;">Размер шрифта текста новости</div>');
+            settingsBlock.append('<input type="text" name="gt-news-text-size-body" id="gt-news-text-size-body" value="'+(typeof currentTheme.newsTextSizeBody == 'undefined' ? defaultTheme.newsTextSizeBody : currentTheme.newsTextSizeBody)+'" style="width:100%;" />');
+            
+            settingsBlock.append('<div style="font: 12px bold;">Размер шрифта текста комментария</div>');
+            settingsBlock.append('<input type="text" name="gt-comments-text-size" id="gt-comments-text-size" value="'+(typeof currentTheme.commentTextSize == 'undefined' ? defaultTheme.commentTextSize : currentTheme.commentTextSize)+'" style="width:100%;" />');
+            
+            settingsBlock.append('<div style="font: 12px bold;">Размер шрифта оффтопика комментария</div>');
+            settingsBlock.append('<input type="text" name="gt-comments-offtopic-text-size" id="gt-comments-offtopic-text-size" value="'+(typeof currentTheme.commentOfftopicTextSize == 'undefined' ? defaultTheme.commentOfftopicTextSize : currentTheme.commentOfftopicTextSize)+'" style="width:100%;" />');
+            
+            settingsBlock.append('<div style="font: 12px bold;">Размер шрифта спойлера комментария</div>');
+            settingsBlock.append('<input type="text" name="gt-comments-spoiler-text-size" id="gt-comments-spoiler-text-size" value="'+(typeof currentTheme.commentSpoilerTextSize == 'undefined' ? defaultTheme.commentSpoilerTextSize : currentTheme.commentSpoilerTextSize)+'" style="width:100%;" />');
+            
+            settingsBlock.append('<input type="button" id="gt-settings-save" value="Применить" style="width:100%;" />');
             
             /* js events */
             $('.user_theme_block .user_theme_current').live('click', function(){
@@ -613,6 +681,27 @@ function main() {
                     if (typeof currentTheme.commentBodyColorEnd != 'undefined') {
                         $('.user_theme_settings #gt-comments-gradient-end').val(currentTheme.commentBodyColorEnd);
                     }
+                    
+                    if (typeof currentTheme.newsTextSizeHeader != 'undefined') {
+                        $('.user_theme_settings #gt-news-text-size-header').val(currentTheme.newsTextSizeHeader);
+                    }
+                    
+                    if (typeof currentTheme.newsTextSizeBody != 'undefined') {
+                        $('.user_theme_settings #gt-news-text-size-body').val(currentTheme.newsTextSizeBody);
+                    }
+                    
+                    if (typeof currentTheme.commentTextSize != 'undefined') {
+                        $('.user_theme_settings #gt-comments-text-size').val(currentTheme.commentTextSize);
+                    }
+                    
+                    if (typeof currentTheme.commentOfftopicTextSize != 'undefined') {
+                        $('.user_theme_settings #gt-comments-offtopic-text-size').val(currentTheme.commentOfftopicTextSize);
+                    }
+                    
+                    if (typeof currentTheme.commentSpoilerTextSize != 'undefined') {
+                        $('.user_theme_settings #gt-comments-spoiler-text-size').val(currentTheme.commentSpoilerTextSize);
+                    }
+                    
                 }
             });
             
@@ -719,18 +808,18 @@ function main() {
             }
         }
         $('.commentaries .item .body').css('border-radius','3px');
-        $('.commentaries .item .head').css({'height': '20px','background':'#eaf2f9','margin': '25px 0 25px 0'});
-        $('.commentaries .item .head .userpic').css({'background':'#eaf2f9','width':'50px','height':'50px', 'top': '-20px', 'padding':'3px','borderRadius':'3px','border':'1px solid #dbe7ef'});
+        $('.commentaries .item .head').css({'height': '20px','background':currentTheme.commentBodyColorEnd,'margin': '25px 0 25px 0'});
+        $('.commentaries .item .head .userpic').css({'background':currentTheme.commentBodyColorEnd,'width':'50px','height':'50px', 'top': '-20px', 'padding':'3px','borderRadius':'3px','border':'1px solid #dbe7ef'});
     }
     OurCommunityComment();
 
 
-    $('.news_list .item').css('font-size', '14px');
-    $('.news_list .item h3').css({'font-size':'17px','font-weight':'bold'});
+    $('.news_list .item').css('font-size', currentTheme.newsTextSizeBody+'px');
+    $('.news_list .item h3').css({'font-size':currentTheme.newsTextSizeHeader+'px','font-weight':'bold'});
     $('div.g960').css({'background': '#F9FBFB','font-family':currentTheme.fontFamily});
     $('.news_list .commentaries .item div.spoiler').css('background', '#F9FBFB');
      $('.news_list .item .clear').css({'border': 'none'});
-     $('.news_list .item div.offtopic').css({'font-size': '12px !important'});
+     $('.news_list .item div.offtopic').css({'font-size': currentTheme.commentOfftopicTextSize+'px !important'});
      $('.news_list .item div.offtopic .reply, .news_list .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'border': 'none !important'});
      $('.news_list .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'color':'#444444'});
      $('.commentaries .item .head .username').css({'padding-left':'60px','display':'inline-block','padding-top':'0px'});
@@ -744,12 +833,12 @@ function main() {
      $('.right_block_content div.item a, .right_block_content h3 a').css({'font-size':'12px'});
      
      /* spoiler div styles*/
-     $('div.spoiler').css({'font-size':'12px'});
+     $('div.spoiler').css({'font-size':currentTheme.commentSpoilerTextSize+'px'});
      $('div#comments_block_place').live('DOMNodeInserted', function(){
          OurCommunityComment();
-         $('.news_list .commentaries .item').css('font-size', '14px');
+         $('.news_list .commentaries .item').css('font-size', currentTheme.commentTextSize+'px');
          $('.news_list .commentaries .item .clear').css({'border': 'none'});
-         $('.news_list .commentaries .item div.offtopic').css({'font-size': '12px !important'});
+         $('.news_list .commentaries .item div.offtopic').css({'font-size':currentTheme.commentOfftopicTextSize+'px !important'});
          $('.news_list .commentaries .item div.offtopic .reply, .news_list .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'border': 'none !important'});
          $('.news_list .commentaries .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'color':'#444444'});
          $('.commentaries .item .head .username').css({'padding-left':'60px','display':'inline-block','padding-top':'0px'});
@@ -762,12 +851,12 @@ function main() {
          $('.news_list .commentaries .item div.spoiler').css('background', '#F9FBFB');
          
          /* spoiler div styles*/
-         $('div.spoiler').css({'font-size':'12px'});
+         $('div.spoiler').css({'font-size':currentTheme.commentSpoilerTextSize+'px'});
      });
      
      $('div#popuper_message_field').live('DOMNodeInserted', function(){
          $('.comment_user_text .clear').css({'border': 'none'});
-         $('.comment_user_text div.offtopic').css({'font-size': '12px !important'});
+         $('.comment_user_text div.offtopic').css({'font-size': currentTheme.commentOfftopicTextSize+'px !important'});
          $('.comment_user_text div.offtopic .reply, .news_list .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'border': 'none !important'});
          $('.comment_user_text div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'color':'#444444'});
          $('.comment_user_text noindex, .comment_user_text b, .comment_user_text i').css({'padding':'5px'});
