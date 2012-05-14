@@ -810,6 +810,16 @@ function main() {
         $('.commentaries .item .body').css('border-radius','3px');
         $('.commentaries .item .head').css({'height': '20px','background':currentTheme.commentBodyColorEnd,'margin': '25px 0 25px 0'});
         $('.commentaries .item .head .userpic').css({'background':currentTheme.commentBodyColorEnd,'width':'50px','height':'50px', 'top': '-20px', 'padding':'3px','borderRadius':'3px','border':'1px solid #dbe7ef'});
+         
+         /* user picture in comment */
+        $('.commentaries .item .body a.big_img img').each(function(){
+            var imgPath = $(this).attr('src');
+            if (imgPath.search('/userpics') == 0) {
+                imgPath = $(this).parent('a').attr('href');
+                $(this).css('width', '100px');
+                $(this).attr('src', imgPath);
+            }
+        });
     }
     OurCommunityComment();
 
