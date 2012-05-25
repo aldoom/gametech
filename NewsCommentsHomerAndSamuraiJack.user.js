@@ -5,7 +5,7 @@
 // @include     http://www.gametech.ru/*
 // @author       Erik Vergobbi Vold & Tyler G. Hicks-Wright & pigForHomer & SamuraiJackGT
 // @description  PigForHomer&SamuraiJack: Делаем gametech удобнее
-// @version     4.1
+// @version     4.2
 // ==/UserScript==
 
 function addJQuery(callback) {
@@ -375,7 +375,9 @@ function main() {
     } )();
     
     gtnamespace.theme = ( function() {
-        var composeSelect, getStoredThemes, getAllThemes, setStoredThemes, applySettings, checkNewFields, constructor, defaultTheme = {
+        var composeSelect, getStoredThemes, getAllThemes, setStoredThemes, applySettings, checkNewFields, 
+        checkPluginInfo,
+        constructor, defaultTheme = {
             name: 'Theme Complex',
             fontFamily: 'Verdana',
             commentBodyGradient: "true",
@@ -401,7 +403,11 @@ function main() {
         },
         cookieCurrentTheme = 'gt-current-theme',
         cookieStoredThemes = 'gt-stored-themes',
-        fonts = [{name:'Verdana'}, {name:'Arial'}, {name:'Tahoma'}, {name:'Helvetica'}];
+        cookieStoredPluginInfo = 'gt-stored-plugin-info',
+        fonts = [{name:'Verdana'}, {name:'Arial'}, {name:'Tahoma'}, {name:'Helvetica'}],
+        defaultPluginInfo = {isShow: false, storedContent: ''},
+        pluginInfoUrls = [{url:'http://dl.dropbox.com/u/30091500/gt/plugin_info.txt'}, {url:''}, {url:''}],
+        currentPluginVersion = '4.2';
         
         composeSelect = function(name, options, selected) {
             var selectBox = $('<select name="'+name+'" id="'+name+'" style="width:100%;"></select>');
@@ -564,6 +570,37 @@ function main() {
             return theme;
         };
         
+        checkPluginInfo = function(){
+            var currentPluginInfo = gtnamespace.cookies.get(cookieStoredPluginInfo);
+            if (currentPluginInfo == null) {
+                var pluginInfo = null;
+                
+                for (var i = 0, len = pluginInfoUrls.length; i < len; ++i) {
+                    if (pluginInfo != null) {
+                        $.ajax({
+                            url:pluginInfoUrls[i].url,
+                            type:'HEAD',
+                            success:
+                            function(res){
+                                if(res != null) {
+                                    pluginInfo = res;
+                                }
+                            }
+                        });
+                    }
+                }
+                
+                
+                var options = {};
+                var expireDate = new Date();
+                expireDate.setTime( expireDate.getTime() + ( 60 * 1000 ) ); //24 * 60 * 60 * 1000
+                options.expiresAt = expireDate;
+
+            } else {
+                
+            }
+        };
+        
         constructor = function(){};
         
         constructor.prototype.getCurrentTheme = function() {
@@ -594,8 +631,12 @@ function main() {
             var currentTheme = this.getCurrentTheme();
             var allThemes = getAllThemes();
 
-            var userThemeBlock = $('<div class="user_theme_block"></div>');
             var startPositionForThemeBlock=$('div.user_logined_block')[0] || $('div.auth_actions')[0];
+            
+            var pluginInfoBlock = $('<div class="plugin_info_block dnone"></div>');
+            pluginInfoBlock.insertAfter(startPositionForThemeBlock);
+            
+            var userThemeBlock = $('<div class="user_theme_block"></div>');
             userThemeBlock.insertAfter(startPositionForThemeBlock);
 
             var headerThemeBlock = $('<div class="user_theme_current"></div>');
@@ -708,6 +749,10 @@ function main() {
             $('input#gt-settings-save').live('click', function(){
                 applySettings();
             });
+            
+            /* Plugin Info Block */
+            
+            
         };
         
         return new constructor();
@@ -716,6 +761,10 @@ function main() {
     /* our styles */
     var styles = $('<style type="text/css" />').appendTo('head');
     styles.html('.user_theme_block {background: -moz-linear-gradient(center top , #F0DE39 0%, #F0DE39 2%, #F9D857 50%, #F9D650 51%, #F9D650 100%) repeat scroll 0 0 transparent;border-radius: 10px 10px 10px 10px;box-shadow: 0 0 3px 1px #F9E350 inset;margin: 0 0 1.5em;padding: 10px;position: relative;} .dnone {display:none;} .user_theme_current {font-weight: bold; cursor: pointer;}');
+    
+    var styles2 = $('<style type="text/css" />').appendTo('head');
+    styles2.html('.plugin_info_block {background: -moz-linear-gradient(center top , #F0DE39 0%, #F0DE39 2%, #F9D857 50%, #F9D650 51%, #F9D650 100%) repeat scroll 0 0 transparent;border-radius: 10px 10px 10px 10px;box-shadow: 0 0 3px 1px #F9E350 inset;margin: 0 0 1.5em;padding: 10px;position: relative;}');
+    
     
     var currentTheme = gtnamespace.theme.getCurrentTheme();
   
@@ -760,6 +809,56 @@ function main() {
                     'json'
                 );
             }
+        });
+    }
+    
+    /* last comment in "Обзоры" table*/
+    window.lastCommentsReviewsTableShow = function() {
+        $('#ri_reviews .item h3 a').each(function(){
+            var self = $(this);
+            var object = self.attr('href');
+            var objectId = object.match(/\d+/gi);
+            object = object.match(/reviews|articles|tools/gi);
+            objectId = objectId[0];
+            object = object[0];
+            switch (object) {
+                case 'tools':
+                    object = 'implement';
+                    break;
+                case 'articles':
+                    object = 'article';
+                    break;
+                case 'reviews':
+                    object = 'review';
+                    break;
+            }
+
+            
+            $.post(
+                'http://www.gametech.ru/cgi-bin/comments.pl',
+                {
+                    action : 'ajax',
+                    id : objectId,
+                    option : object,
+                    sub_option : 'refresh'
+                },
+                function(res){
+                    if(res.status == 'ok') {
+                        var lastComment = $(res.content).find('.commentaries .item:first');
+                        var userName = lastComment.find('a.username');
+                        userName.find('img').remove();
+                        userName = userName.html();
+                        if (userName != null) {
+                            var commentTime = lastComment.find('span.date').html();
+
+                            var commentString = '<span style="display:block;color:#5D5D5D;">'+userName+' '+commentTime+'</span>';
+                            self.parents('.item').append(commentString);
+                        }
+                    }
+                },
+                'json'
+            );
+            
         });
     }
     
