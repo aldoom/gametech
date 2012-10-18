@@ -1,0 +1,24 @@
+{
+	"name": "Gametech Community Style",
+	"version": "4.2.2",
+	"description": "SamuraiJack & PigForHomer: Удобные новости, красивые комментарии, читабельный текст. Полный список новостей на главной странице.",
+	"background" : { "scripts": ["background.js"] },
+	"page_action" :
+	{
+		"default_icon" : "icon.png",
+		"default_title" : "Gametech Community Style (SamuraiJack & PigForHomer)"
+	},
+	"content_scripts": [
+	{
+		"matches": ["http://www.gametech.ru/*"],
+		"js": ["jquery-1.8.2.min.js", "NewsCommentsHomerAndSamuraiJack.user.js"],
+		"run_at": "document_idle"
+	}
+	],
+	"icons": {
+		"48": "icon48.png",
+		"128": "icon128.png"
+	},
+	"manifest_version": 2,
+    "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
+}
