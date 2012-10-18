@@ -5,7 +5,7 @@
 // @author       SamuraiJack & PigForHomer
 // @description  SamuraiJack & PigForHomer: Удобные новости, красивые комментарии, читабельный текст.
 //               Полный список новостей на главной странице.
-// @version     4.2
+// @version     4.2.2
 // ==/UserScript==
 
 try{
@@ -948,7 +948,6 @@ function main() {
             var imgPath = $(this).attr('src');
             if (imgPath.search('/userpics') == 0) {
                 imgPath = $(this).parent('a').attr('href');
-                $(this).css('width', '100px');
                 $(this).attr('src', imgPath);
             }
         });
@@ -1173,3 +1172,14 @@ function main() {
 }
 
 addJQuery(main);
+
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-35688381-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = 'https://ssl.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
