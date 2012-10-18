@@ -1,12 +1,16 @@
 // ==UserScript==
-// @name         Удобные новости, красивые комментарии, читабельный текст
-//               Полный список новостей на главной странице
-// @namespace    pigForHomerNews
-// @include     http://www.gametech.ru/*
-// @author       Erik Vergobbi Vold & Tyler G. Hicks-Wright & pigForHomer & SamuraiJackGT
-// @description  PigForHomer&SamuraiJack: Делаем gametech удобнее
+// @name         Gametech Community Style
+// @namespace    http://github.com/aldoom/gametech
+// @include      http://www.gametech.ru/*
+// @author       SamuraiJack & PigForHomer
+// @description  SamuraiJack & PigForHomer: Удобные новости, красивые комментарии, читабельный текст.
+//               Полный список новостей на главной странице.
 // @version     4.2
 // ==/UserScript==
+
+try{
+	chrome.extension.sendRequest({}, function(response) {});
+}catch(e){}
 
 function addJQuery(callback) {
   var script = document.createElement("script");
@@ -376,7 +380,7 @@ function main() {
     
     gtnamespace.theme = ( function() {
         var composeSelect, getStoredThemes, getAllThemes, setStoredThemes, applySettings, checkNewFields, 
-        checkPluginInfo,
+        
         constructor, defaultTheme = {
             name: 'Theme Complex',
             fontFamily: 'Verdana',
@@ -403,11 +407,7 @@ function main() {
         },
         cookieCurrentTheme = 'gt-current-theme',
         cookieStoredThemes = 'gt-stored-themes',
-        cookieStoredPluginInfo = 'gt-stored-plugin-info',
-        fonts = [{name:'Verdana'}, {name:'Arial'}, {name:'Tahoma'}, {name:'Helvetica'}],
-        defaultPluginInfo = {isShow: false, storedContent: ''},
-        pluginInfoUrls = [{url:'http://dl.dropbox.com/u/30091500/gt/plugin_info.txt'}, {url:''}, {url:''}],
-        currentPluginVersion = '4.2';
+        fonts = [{name:'Verdana'}, {name:'Arial'}, {name:'Tahoma'}, {name:'Helvetica'}];
         
         composeSelect = function(name, options, selected) {
             var selectBox = $('<select name="'+name+'" id="'+name+'" style="width:100%;"></select>');
@@ -568,37 +568,6 @@ function main() {
                 theme = defaultTheme;
             }
             return theme;
-        };
-        
-        checkPluginInfo = function(){
-            var currentPluginInfo = gtnamespace.cookies.get(cookieStoredPluginInfo);
-            if (currentPluginInfo == null) {
-                var pluginInfo = null;
-                
-                for (var i = 0, len = pluginInfoUrls.length; i < len; ++i) {
-                    if (pluginInfo != null) {
-                        $.ajax({
-                            url:pluginInfoUrls[i].url,
-                            type:'HEAD',
-                            success:
-                            function(res){
-                                if(res != null) {
-                                    pluginInfo = res;
-                                }
-                            }
-                        });
-                    }
-                }
-                
-                
-                var options = {};
-                var expireDate = new Date();
-                expireDate.setTime( expireDate.getTime() + ( 60 * 1000 ) ); //24 * 60 * 60 * 1000
-                options.expiresAt = expireDate;
-
-            } else {
-                
-            }
         };
         
         constructor = function(){};
@@ -770,10 +739,21 @@ function main() {
   
     /* last comment in our news table*/
     window.lastCommentsShow = function(onNewsPage) {
-        $('table.news_shortlist a, div.news_list .item h3 a').each(function(){
+        $('table.news_shortlist a, div.news_list .item h3 a, #ri_news .item h3 a').each(function(){
             var self = $(this);
             var newsId = self.attr('href');
             if (newsId.indexOf("comments_block") == -1) {
+				var object = newsId.match(/reviews|articles|tools|results/gi);
+				object = object != null ? object[0] : null;
+				switch (object) {
+					case 'tools':
+					case 'articles':
+					case 'reviews':
+					case 'results':
+						return true;
+						break;
+				}
+				
                 newsId = newsId.match(/\d+/gi);
                 newsId = newsId[0];
                 $.post(
@@ -801,7 +781,11 @@ function main() {
                                     commentTime = commentTime.substr((commentTime.indexOf(',')+1));
 
                                     var commentString = '<span style="display:block;color:#5D5D5D;">'+userName+''+commentTime+'</span>';
-                                    self.parent('td').append(commentString);
+									if (self.parents('div.#ri_news').length) {
+										self.parents('.item').append(commentString);
+									} else {
+										self.parent('td').append(commentString);
+									}
                                 }
                             }
                         }
@@ -814,11 +798,11 @@ function main() {
     
     /* last comment in "Обзоры" table*/
     window.lastCommentsReviewsTableShow = function() {
-        $('#ri_reviews .item h3 a').each(function(){
+        $('#ri_reviews .item h3 a, div.news_list .item h3 a').each(function(){
             var self = $(this);
             var object = self.attr('href');
             var objectId = object.match(/\d+/gi);
-            object = object.match(/reviews|articles|tools/gi);
+            object = object.match(/reviews|articles|tools|results|news/gi);
             objectId = objectId[0];
             object = object[0];
             switch (object) {
@@ -831,6 +815,12 @@ function main() {
                 case 'reviews':
                     object = 'review';
                     break;
+				case 'results':
+					object = 'results';
+					break;
+				default:
+					return true;
+					break;
             }
 
             
@@ -849,10 +839,17 @@ function main() {
                         userName.find('img').remove();
                         userName = userName.html();
                         if (userName != null) {
-                            var commentTime = lastComment.find('span.date').html();
+							if (self.parents('div.news_list').length) {
+								var commentTime = lastComment.find('span.date').html();
 
-                            var commentString = '<span style="display:block;color:#5D5D5D;">'+userName+' '+commentTime+'</span>';
-                            self.parents('.item').append(commentString);
+								var commentString = '<span style="display:block;color:#5D5D5D;">Последний комментарий от '+userName+' '+commentTime+'</span>';
+								self.parents('.item').append(commentString);
+							} else {
+								var commentTime = lastComment.find('span.date').html();
+
+								var commentString = '<span style="display:block;color:#5D5D5D;">'+userName+' '+commentTime+'</span>';
+								self.parents('.item').append(commentString);
+							}
                         }
                     }
                 },
@@ -998,11 +995,13 @@ function main() {
     });
     
     window.lastCommentsShow();
+	window.lastCommentsReviewsTableShow();
  }
  else {
      $('div.g960').css({'background': '#F9FBFB','font-family':currentTheme.fontFamily,'font-size':'12px'});
      $('div.left_col table.news_shortlist').load('http://www.gametech.ru/news/26889/ table.news_shortlist>tbody', function(res){
          window.lastCommentsShow();
+		 window.lastCommentsReviewsTableShow();
      });
      $('div.more_news').remove();
      $('div.breadcrumbs').remove();
