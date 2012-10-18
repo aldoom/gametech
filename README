@@ -1,10 +1,8 @@
 Как сделать этот сайт гостеприимнее до прихода Д’Артаньяна? Легко!
-Есть файл (версия 4):
-http://navira.ru/myJS/NewsCommentsHomer&SamuraiJac.user.js
-
-или с этого репазитория:
 https://github.com/aldoom/gametech/raw/master/NewsCommentsHomerAndSamuraiJack.user.js
 
-1. Для Хронма: просто открыть эту ссылку
-2. Для Лисы: установить Greasemonkey и далее открыть эту ссылку
+1. Для Хрома: 
+Скачать: https://github.com/aldoom/gametech/raw/master/chrome_extension/gametech_4_2_2.crx
+Перетащить в хром во вкладку расширений (Tools->Extensions / Инструменты->Расширения)
+2. Для Лисы: установить Greasemonkey и далее открыть эту ссылку https://github.com/aldoom/gametech/raw/master/NewsCommentsHomerAndSamuraiJack.user.js
 3. Для оперы: скопировать файл в папку пользовательских скриптов сайта. Узнать где это можно нажав F12, и перейдя на вкладку скрипты.
