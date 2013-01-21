@@ -391,7 +391,10 @@ function main() {
             newsTextSizeBody: '14',
             commentTextSize: '14',
             commentOfftopicTextSize: '12',
-            commentSpoilerTextSize: '12'
+            commentSpoilerTextSize: '12',
+            commentRateColorType: 'default',
+            commentUpRateColor: '#B3F3B3',
+            commentDownRateColor: '#F3B3B3'
         },
         SJTheme = {
             name: 'Theme SamuraiJack',
@@ -403,7 +406,10 @@ function main() {
             newsTextSizeBody: '14',
             commentTextSize: '14',
             commentOfftopicTextSize: '12',
-            commentSpoilerTextSize: '12'
+            commentSpoilerTextSize: '12',
+            commentRateColorType: 'color',
+            commentUpRateColor: '#B3F3B3',
+            commentDownRateColor: '#F3B3B3'
         },
         cookieCurrentTheme = 'gt-current-theme',
         cookieStoredThemes = 'gt-stored-themes',
@@ -477,7 +483,10 @@ function main() {
                 newsTextSizeBody: settingsBlock.find('#gt-news-text-size-body').val(),
                 commentTextSize: settingsBlock.find('#gt-comments-text-size').val(),
                 commentOfftopicTextSize: settingsBlock.find('#gt-comments-offtopic-text-size').val(),
-                commentSpoilerTextSize: settingsBlock.find('#gt-comments-spoiler-text-size').val()
+                commentSpoilerTextSize: settingsBlock.find('#gt-comments-spoiler-text-size').val(),
+                commentRateColorType: settingsBlock.find('#gt-comments-rate-color-type').val(),
+                commentUpRateColor: settingsBlock.find('#gt-comments-up-rate-color').val(),
+                commentDownRateColor: settingsBlock.find('#gt-comments-down-rate-color').val()
             };
             
             var isStored = false;
@@ -493,7 +502,10 @@ function main() {
                         themeToSave.newsTextSizeBody != defaultTheme.newsTextSizeBody ||
                         themeToSave.commentTextSize != defaultTheme.commentTextSize ||
                         themeToSave.commentOfftopicTextSize != defaultTheme.commentOfftopicTextSize ||
-                        themeToSave.commentSpoilerTextSize != defaultTheme.commentSpoilerTextSize
+                        themeToSave.commentSpoilerTextSize != defaultTheme.commentSpoilerTextSize ||
+                        themeToSave.commentRateColorType != defaultTheme.commentRateColorType ||
+                        themeToSave.commentUpRateColor != defaultTheme.commentUpRateColor ||
+                        themeToSave.commentDownRateColor != defaultTheme.commentDownRateColor
                         )
                 ) 
                 || 
@@ -507,7 +519,10 @@ function main() {
                         themeToSave.newsTextSizeBody != SJTheme.newsTextSizeBody ||
                         themeToSave.commentTextSize != SJTheme.commentTextSize ||
                         themeToSave.commentOfftopicTextSize != SJTheme.commentOfftopicTextSize ||
-                        themeToSave.commentSpoilerTextSize != SJTheme.commentSpoilerTextSize
+                        themeToSave.commentSpoilerTextSize != SJTheme.commentSpoilerTextSize ||
+                        themeToSave.commentRateColorType != SJTheme.commentRateColorType ||
+                        themeToSave.commentUpRateColor != SJTheme.commentUpRateColor ||
+                        themeToSave.commentDownRateColor != SJTheme.commentDownRateColor
                         )
                 )
                 ) {
@@ -563,6 +578,18 @@ function main() {
                 
                 if (typeof theme.commentSpoilerTextSize == 'undefined') {
                     theme.commentSpoilerTextSize = defaultTheme.commentSpoilerTextSize;
+                }
+                
+                if (typeof theme.commentRateColorType == 'undefined') {
+                    theme.commentRateColorType = defaultTheme.commentRateColorType;
+                }
+                
+                if (typeof theme.commentUpRateColor == 'undefined') {
+                    theme.commentUpRateColor = defaultTheme.commentUpRateColor;
+                }
+                
+                if (typeof theme.commentDownRateColor == 'undefined') {
+                    theme.commentDownRateColor = defaultTheme.commentDownRateColor;
                 }
             } else {
                 theme = defaultTheme;
@@ -651,6 +678,15 @@ function main() {
             settingsBlock.append('<div style="font: 12px bold;">Размер шрифта спойлера комментария</div>');
             settingsBlock.append('<input type="text" name="gt-comments-spoiler-text-size" id="gt-comments-spoiler-text-size" value="'+(typeof currentTheme.commentSpoilerTextSize == 'undefined' ? defaultTheme.commentSpoilerTextSize : currentTheme.commentSpoilerTextSize)+'" style="width:100%;" />');
             
+            settingsBlock.append('<div style="font: 12px bold;">Тип рейтингов комментариев</div>');
+            settingsBlock.append(composeSelect('gt-comments-rate-color-type',[{value:"default", text:'по умочанию'},{value:"color", text:'цветной'},{value:"hidden", text:'не показывать'}],(typeof currentTheme.commentRateColorType == 'undefined' ? defaultTheme.commentRateColorType : currentTheme.commentRateColorType)));
+            /*
+            settingsBlock.append('<div style="font: 12px bold;">Цвет высокого рейтинга</div>');
+            settingsBlock.append('<input type="text" name="gt-comments-up-rate-color" id="gt-comments-up-rate-color" value="'+(typeof currentTheme.commentUpRateColor == 'undefined' ? defaultTheme.commentUpRateColor : currentTheme.commentUpRateColor)+'" style="width:100%;" />');
+            
+            settingsBlock.append('<div style="font: 12px bold;">Цвет низкого рейтинга</div>');
+            settingsBlock.append('<input type="text" name="gt-comments-down-rate-color" id="gt-comments-down-rate-color" value="'+(typeof currentTheme.commentDownRateColor == 'undefined' ? defaultTheme.commentDownRateColor : currentTheme.commentDownRateColor)+'" style="width:100%;" />');
+            */
             settingsBlock.append('<input type="button" id="gt-settings-save" value="Применить" style="width:100%;" />');
             
             /* js events */
@@ -710,6 +746,18 @@ function main() {
                     
                     if (typeof currentTheme.commentSpoilerTextSize != 'undefined') {
                         $('.user_theme_settings #gt-comments-spoiler-text-size').val(currentTheme.commentSpoilerTextSize);
+                    }
+                    
+                    if (typeof currentTheme.commentRateColorType != 'undefined') {
+                        $('.user_theme_settings #gt-comments-rate-color-type').val(currentTheme.commentRateColorType);
+                    }
+                    
+                    if (typeof currentTheme.commentUpRateColor != 'undefined') {
+                        $('.user_theme_settings #gt-comments-up-rate-color').val(currentTheme.commentUpRateColor);
+                    }
+                    
+                    if (typeof currentTheme.commentDownRateColor != 'undefined') {
+                        $('.user_theme_settings #gt-comments-down-rate-color').val(currentTheme.commentDownRateColor);
                     }
                     
                 }
@@ -975,6 +1023,31 @@ function main() {
      
      /* spoiler div styles*/
      $('div.spoiler').css({'font-size':currentTheme.commentSpoilerTextSize+'px'});
+     
+     /* rate type */
+     if (currentTheme.commentRateColorType == 'color') {
+         $('.commentaries .item .head').css({'text-shadow':'none'});
+         $('.commentaries .item .head').each(function(){
+             var ratingVal = $(this).find('.comment_rating .cr_value').html();
+             ratingVal = parseInt(ratingVal);
+             var calcRat = ratingVal;
+             var maxColorHex = 242;
+             if (ratingVal > 0) {
+                 calcRat = (ratingVal > 20 ? 20 : ratingVal);
+                 var colorA = [(maxColorHex - calcRat * 3), maxColorHex, (maxColorHex - calcRat * 3)];
+                 var colorS = 'rgb(' + colorA[0] + ',' + colorA[1] + ',' + colorA[2] + ')';
+                 $(this).css({'background-color':colorS});
+             } else if (ratingVal < 0) {
+                 calcRat = (ratingVal < -20 ? -20 : ratingVal) * (-1);
+                 var colorA = [maxColorHex, (maxColorHex - calcRat * 3), (maxColorHex - calcRat * 3)];
+                 var colorS = 'rgb(' + colorA[0] + ',' + colorA[1] + ',' + colorA[2] + ')';
+                 $(this).css({'background-color':colorS});
+             }
+         });
+     } else if (currentTheme.commentRateColorType == 'hidden') {
+         $('.commentaries .item .head .comment_rating').css({'display':'none'});
+     }
+     
      $('div#comments_block_place').live('DOMNodeInserted', function(){
          OurCommunityComment();
          $('.news_list .commentaries .item').css('font-size', currentTheme.commentTextSize+'px');
@@ -993,6 +1066,30 @@ function main() {
          
          /* spoiler div styles*/
          $('div.spoiler').css({'font-size':currentTheme.commentSpoilerTextSize+'px'});
+         
+         /* rate type */
+         if (currentTheme.commentRateColorType == 'color') {
+             $('.commentaries .item .head').css({'text-shadow':'none'});
+             $('.commentaries .item .head').each(function(){
+                 var ratingVal = $(this).find('.comment_rating .cr_value').html();
+                 ratingVal = parseInt(ratingVal);
+                 var calcRat = ratingVal;
+                 var maxColorHex = 242;
+                 if (ratingVal > 0) {
+                     calcRat = (ratingVal > 20 ? 20 : ratingVal);
+                     var colorA = [(maxColorHex - calcRat * 3), maxColorHex, (maxColorHex - calcRat * 3)];
+                     var colorS = 'rgb(' + colorA[0] + ',' + colorA[1] + ',' + colorA[2] + ')';
+                     $(this).css({'background-color':colorS});
+                 } else if (ratingVal < 0) {
+                     calcRat = (ratingVal < -20 ? -20 : ratingVal) * (-1);
+                     var colorA = [maxColorHex, (maxColorHex - calcRat * 3), (maxColorHex - calcRat * 3)];
+                     var colorS = 'rgb(' + colorA[0] + ',' + colorA[1] + ',' + colorA[2] + ')';
+                     $(this).css({'background-color':colorS});
+                 }
+             });
+         } else if (currentTheme.commentRateColorType == 'hidden') {
+             $('.commentaries .item .head .comment_rating').css({'display':'none'});
+         }
      });
      
      $('div#popuper_message_field').live('DOMNodeInserted', function(){
