@@ -5,7 +5,7 @@
 // @author       SamuraiJack & PigForHomer
 // @description  SamuraiJack & PigForHomer: Удобные новости, красивые комментарии, читабельный текст.
 //               Полный список новостей на главной странице.
-// @version     4.2.3
+// @version     4.2.4
 // ==/UserScript==
 
 try{
