@@ -5,7 +5,7 @@
 // @author       SamuraiJack & PigForHomer
 // @description  SamuraiJack & PigForHomer: Удобные новости, красивые комментарии, читабельный текст.
 //               Полный список новостей на главной странице.
-// @version     4.2.2
+// @version     4.2.3
 // ==/UserScript==
 
 try{
@@ -966,7 +966,7 @@ function main() {
      $('.commentaries .item .head .username').css({'padding-left':'60px','display':'inline-block','padding-top':'0px'});
      $('.commentaries .item .body .reply').css({'margin':'0px','borderRadius':'3px'});
      $('div.offtopic').css({'background-color':'#EDEDED','border':'1px solid #CDCDCD','color':'#ADADAD','padding':'2px'}).removeClass('offtopic');
-     $('.commentaries .item .body noindex, .commentaries .item .body b, .commentaries .item .body i').css({'padding':'5px'});
+     //$('.commentaries .item .body noindex, .commentaries .item .body b, .commentaries .item .body i').css({'padding':'5px'});
      //$('.commentaries .item .body').each(function(){var txt = $(this).html();spacesForTags(txt);});
      //$('.comment_user_text').each(function(){var txt = $(this).html();spacesForTags(txt);});
      
@@ -985,7 +985,7 @@ function main() {
          $('.commentaries .item .head .username').css({'padding-left':'60px','display':'inline-block','padding-top':'0px'});
          $('.commentaries .item .body .reply').css({'margin':'0px','borderRadius':'3px'});
          $('.news_list .commentaries .item div.offtopic').css({'background-color':'#EDEDED','border':'1px solid #CDCDCD','color':'#ADADAD','padding':'2px'}).removeClass('offtopic');
-         $('.commentaries .item .body noindex, .commentaries .item .body b, .commentaries .item .body i').css({'padding':'5px'});
+         //$('.commentaries .item .body noindex, .commentaries .item .body b, .commentaries .item .body i').css({'padding':'5px'});
          //$('.commentaries .item .body').each(function(){var txt = $(this).html();spacesForTags(txt);});
          //$('.comment_user_text').each(function(){var txt = $(this).html();spacesForTags(txt);});
          
@@ -1000,7 +1000,7 @@ function main() {
          $('.comment_user_text div.offtopic').css({'font-size': currentTheme.commentOfftopicTextSize+'px !important'});
          $('.comment_user_text div.offtopic .reply, .news_list .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'border': 'none !important'});
          $('.comment_user_text div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'color':'#444444'});
-         $('.comment_user_text noindex, .comment_user_text b, .comment_user_text i').css({'padding':'5px'});
+         //$('.comment_user_text noindex, .comment_user_text b, .comment_user_text i').css({'padding':'5px'});
          //$('.commentaries .item .body').each(function(){var txt = $(this).html();spacesForTags(txt);});
          //$('.comment_user_text').each(function(){var txt = $(this).html();spacesForTags(txt);});
          $('.comment_user_text div.offtopic').css({'background-color':'#EDEDED','border':'1px solid #CDCDCD','color':'#ADADAD','padding':'2px'}).removeClass('offtopic');
