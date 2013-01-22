@@ -384,6 +384,22 @@ function main() {
         constructor, defaultTheme = {
             name: 'Theme Complex',
             fontFamily: 'Verdana',
+            commentBodyGradient: "false",
+            commentBodyColorStart: '#FFFFFF',
+            commentBodyColorEnd: '#EAF2F9',
+            newsTextSizeHeader: '17',
+            newsTextSizeBody: '14',
+            commentTextSize: '14',
+            commentOfftopicTextSize: '12',
+            commentSpoilerTextSize: '12',
+			commentTurnOffTextShadow: 'true',
+            commentRateColorType: 'color',
+            commentUpRateColor: '#B3F3B3',
+            commentDownRateColor: '#F3B3B3'
+        },
+		defaultGradientTheme = {
+            name: 'Theme Complex Gradient',
+            fontFamily: 'Verdana',
             commentBodyGradient: "true",
             commentBodyColorStart: '#FFFFFF',
             commentBodyColorEnd: '#BACDDD',
@@ -392,7 +408,8 @@ function main() {
             commentTextSize: '14',
             commentOfftopicTextSize: '12',
             commentSpoilerTextSize: '12',
-            commentRateColorType: 'default',
+			commentTurnOffTextShadow: 'true',
+            commentRateColorType: 'color',
             commentUpRateColor: '#B3F3B3',
             commentDownRateColor: '#F3B3B3'
         },
@@ -407,6 +424,7 @@ function main() {
             commentTextSize: '14',
             commentOfftopicTextSize: '12',
             commentSpoilerTextSize: '12',
+			commentTurnOffTextShadow: 'true',
             commentRateColorType: 'color',
             commentUpRateColor: '#B3F3B3',
             commentDownRateColor: '#F3B3B3'
@@ -457,6 +475,7 @@ function main() {
             
             returnArray.push(defaultTheme);
             returnArray.push(SJTheme);
+            returnArray.push(defaultGradientTheme);
             for (i = 0; i < storedThemes.length; i++) {
                 returnArray.push(storedThemes[i]);
             }
@@ -484,6 +503,7 @@ function main() {
                 commentTextSize: settingsBlock.find('#gt-comments-text-size').val(),
                 commentOfftopicTextSize: settingsBlock.find('#gt-comments-offtopic-text-size').val(),
                 commentSpoilerTextSize: settingsBlock.find('#gt-comments-spoiler-text-size').val(),
+				commentTurnOffTextShadow: settingsBlock.find('#gt-comments-turn-off-text-shadow').val(),
                 commentRateColorType: settingsBlock.find('#gt-comments-rate-color-type').val(),
                 commentUpRateColor: settingsBlock.find('#gt-comments-up-rate-color').val(),
                 commentDownRateColor: settingsBlock.find('#gt-comments-down-rate-color').val()
@@ -503,6 +523,7 @@ function main() {
                         themeToSave.commentTextSize != defaultTheme.commentTextSize ||
                         themeToSave.commentOfftopicTextSize != defaultTheme.commentOfftopicTextSize ||
                         themeToSave.commentSpoilerTextSize != defaultTheme.commentSpoilerTextSize ||
+                        themeToSave.commentTurnOffTextShadow != defaultTheme.commentTurnOffTextShadow ||
                         themeToSave.commentRateColorType != defaultTheme.commentRateColorType ||
                         themeToSave.commentUpRateColor != defaultTheme.commentUpRateColor ||
                         themeToSave.commentDownRateColor != defaultTheme.commentDownRateColor
@@ -520,14 +541,33 @@ function main() {
                         themeToSave.commentTextSize != SJTheme.commentTextSize ||
                         themeToSave.commentOfftopicTextSize != SJTheme.commentOfftopicTextSize ||
                         themeToSave.commentSpoilerTextSize != SJTheme.commentSpoilerTextSize ||
+                        themeToSave.commentTurnOffTextShadow != SJTheme.commentTurnOffTextShadow ||
                         themeToSave.commentRateColorType != SJTheme.commentRateColorType ||
                         themeToSave.commentUpRateColor != SJTheme.commentUpRateColor ||
                         themeToSave.commentDownRateColor != SJTheme.commentDownRateColor
                         )
                 )
+                || 
+                (themeName == defaultGradientTheme.name
+                    && (
+                        themeToSave.fontFamily != defaultGradientTheme.fontFamily ||
+                        themeToSave.commentBodyGradient != defaultGradientTheme.commentBodyGradient ||
+                        themeToSave.commentBodyColorStart != defaultGradientTheme.commentBodyColorStart ||
+                        themeToSave.commentBodyColorEnd != defaultGradientTheme.commentBodyColorEnd ||
+                        themeToSave.newsTextSizeHeader != defaultGradientTheme.newsTextSizeHeader ||
+                        themeToSave.newsTextSizeBody != defaultGradientTheme.newsTextSizeBody ||
+                        themeToSave.commentTextSize != defaultGradientTheme.commentTextSize ||
+                        themeToSave.commentOfftopicTextSize != defaultGradientTheme.commentOfftopicTextSize ||
+                        themeToSave.commentSpoilerTextSize != defaultGradientTheme.commentSpoilerTextSize ||
+                        themeToSave.commentTurnOffTextShadow != defaultGradientTheme.commentTurnOffTextShadow ||
+                        themeToSave.commentRateColorType != defaultGradientTheme.commentRateColorType ||
+                        themeToSave.commentUpRateColor != defaultGradientTheme.commentUpRateColor ||
+                        themeToSave.commentDownRateColor != defaultGradientTheme.commentDownRateColor
+                        )
+                )
                 ) {
                 themeToSave.name = themeToSave.name + ' copy';
-            } else if (themeName == defaultTheme.name || themeName == SJTheme.name) {
+            } else if (themeName == defaultTheme.name || themeName == SJTheme.name || themeName == defaultGradientTheme.name) {
                 isStored = true;
             }
             
@@ -582,6 +622,10 @@ function main() {
                 
                 if (typeof theme.commentRateColorType == 'undefined') {
                     theme.commentRateColorType = defaultTheme.commentRateColorType;
+                }
+                
+                if (typeof theme.commentTurnOffTextShadow == 'undefined') {
+                    theme.commentTurnOffTextShadow = defaultTheme.commentTurnOffTextShadow;
                 }
                 
                 if (typeof theme.commentUpRateColor == 'undefined') {
@@ -678,6 +722,9 @@ function main() {
             settingsBlock.append('<div style="font: 12px bold;">Размер шрифта спойлера комментария</div>');
             settingsBlock.append('<input type="text" name="gt-comments-spoiler-text-size" id="gt-comments-spoiler-text-size" value="'+(typeof currentTheme.commentSpoilerTextSize == 'undefined' ? defaultTheme.commentSpoilerTextSize : currentTheme.commentSpoilerTextSize)+'" style="width:100%;" />');
             
+            settingsBlock.append('<div style="font: 12px bold;">Тень от текста на заголовке комментария</div>');
+            settingsBlock.append(composeSelect('gt-comments-turn-off-text-shadow',[{value:"true", text:'выключена'},{value:"false", text:'включена'}],(typeof currentTheme.commentTurnOffTextShadow == 'undefined' ? defaultTheme.commentTurnOffTextShadow : currentTheme.commentTurnOffTextShadow)));
+            
             settingsBlock.append('<div style="font: 12px bold;">Тип рейтингов комментариев</div>');
             settingsBlock.append(composeSelect('gt-comments-rate-color-type',[{value:"default", text:'по умочанию'},{value:"color", text:'цветной'},{value:"hidden", text:'не показывать'}],(typeof currentTheme.commentRateColorType == 'undefined' ? defaultTheme.commentRateColorType : currentTheme.commentRateColorType)));
             /*
@@ -748,6 +795,10 @@ function main() {
                         $('.user_theme_settings #gt-comments-spoiler-text-size').val(currentTheme.commentSpoilerTextSize);
                     }
                     
+                    if (typeof currentTheme.commentTurnOffTextShadow != 'undefined') {
+                        $('.user_theme_settings #gt-comments-turn-off-text-shadow').val(currentTheme.commentTurnOffTextShadow);
+                    }
+                    
                     if (typeof currentTheme.commentRateColorType != 'undefined') {
                         $('.user_theme_settings #gt-comments-rate-color-type').val(currentTheme.commentRateColorType);
                     }
@@ -777,10 +828,36 @@ function main() {
     
     /* our styles */
     var styles = $('<style type="text/css" />').appendTo('head');
-    styles.html('.user_theme_block {background: -moz-linear-gradient(center top , #F0DE39 0%, #F0DE39 2%, #F9D857 50%, #F9D650 51%, #F9D650 100%) repeat scroll 0 0 transparent;border-radius: 10px 10px 10px 10px;box-shadow: 0 0 3px 1px #F9E350 inset;margin: 0 0 1.5em;padding: 10px;position: relative;} .dnone {display:none;} .user_theme_current {font-weight: bold; cursor: pointer;}');
+    styles.html('.user_theme_block {\n\
+background: #f0de39;\n\
+background: -moz-linear-gradient(center top , #F0DE39 0%, #F0DE39 2%, #F9D857 50%, #F9D650 51%, #F9D650 100%) repeat scroll 0 0 transparent;\n\
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0de39), color-stop(2%,#f0de39), color-stop(50%,#f9d857), color-stop(51%,#f9d650), color-stop(100%,#f9d650));\n\
+background: -webkit-linear-gradient(top, #f0de39 0%,#f0de39 2%,#f9d857 50%,#f9d650 51%,#f9d650 100%);\n\
+background: -o-linear-gradient(top, #f0de39 0%,#f0de39 2%,#f9d857 50%,#f9d650 51%,#f9d650 100%);\n\
+background: -ms-linear-gradient(top, #f0de39 0%,#f0de39 2%,#f9d857 50%,#f9d650 51%,#f9d650 100%);\n\
+background: linear-gradient(top, #f0de39 0%,#f0de39 2%,#f9d857 50%,#f9d650 51%,#f9d650 100%);\n\
+border-radius: 10px 10px 10px 10px;\n\
+box-shadow: 0 0 3px 1px #F9E350 inset;\n\
+margin: 0 0 1.5em;\n\
+padding: 10px;\n\
+position: relative;} \n\
+.dnone {display:none;} \n\
+.user_theme_current {font-weight: bold; cursor: pointer;}');
     
     var styles2 = $('<style type="text/css" />').appendTo('head');
-    styles2.html('.plugin_info_block {background: -moz-linear-gradient(center top , #F0DE39 0%, #F0DE39 2%, #F9D857 50%, #F9D650 51%, #F9D650 100%) repeat scroll 0 0 transparent;border-radius: 10px 10px 10px 10px;box-shadow: 0 0 3px 1px #F9E350 inset;margin: 0 0 1.5em;padding: 10px;position: relative;}');
+    styles2.html('.plugin_info_block {\n\
+background: #f0de39;\n\
+background: -moz-linear-gradient(center top , #F0DE39 0%, #F0DE39 2%, #F9D857 50%, #F9D650 51%, #F9D650 100%) repeat scroll 0 0 transparent;\n\
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0de39), color-stop(2%,#f0de39), color-stop(50%,#f9d857), color-stop(51%,#f9d650), color-stop(100%,#f9d650));\n\
+background: -webkit-linear-gradient(top, #f0de39 0%,#f0de39 2%,#f9d857 50%,#f9d650 51%,#f9d650 100%);\n\
+background: -o-linear-gradient(top, #f0de39 0%,#f0de39 2%,#f9d857 50%,#f9d650 51%,#f9d650 100%);\n\
+background: -ms-linear-gradient(top, #f0de39 0%,#f0de39 2%,#f9d857 50%,#f9d650 51%,#f9d650 100%);\n\
+background: linear-gradient(top, #f0de39 0%,#f0de39 2%,#f9d857 50%,#f9d650 51%,#f9d650 100%);\n\
+border-radius: 10px 10px 10px 10px;\n\
+box-shadow: 0 0 3px 1px #F9E350 inset;\n\
+margin: 0 0 1.5em;\n\
+padding: 10px;\n\
+position: relative;}');
     
     
     var currentTheme = gtnamespace.theme.getCurrentTheme();
@@ -1026,7 +1103,6 @@ function main() {
      
      /* rate type */
      if (currentTheme.commentRateColorType == 'color') {
-         $('.commentaries .item .head').css({'text-shadow':'none'});
          $('.commentaries .item .head').each(function(){
              var ratingVal = $(this).find('.comment_rating .cr_value').html();
              ratingVal = parseInt(ratingVal);
@@ -1047,6 +1123,11 @@ function main() {
      } else if (currentTheme.commentRateColorType == 'hidden') {
          $('.commentaries .item .head .comment_rating').css({'display':'none'});
      }
+	 
+	 /* text shadow */
+	 if (currentTheme.commentTurnOffTextShadow == 'true') {
+		 $('.commentaries .item .head').css({'text-shadow':'none'});
+	 }
      
      $('div#comments_block_place').live('DOMNodeInserted', function(){
          OurCommunityComment();
@@ -1069,7 +1150,6 @@ function main() {
          
          /* rate type */
          if (currentTheme.commentRateColorType == 'color') {
-             $('.commentaries .item .head').css({'text-shadow':'none'});
              $('.commentaries .item .head').each(function(){
                  var ratingVal = $(this).find('.comment_rating .cr_value').html();
                  ratingVal = parseInt(ratingVal);
@@ -1090,6 +1170,11 @@ function main() {
          } else if (currentTheme.commentRateColorType == 'hidden') {
              $('.commentaries .item .head .comment_rating').css({'display':'none'});
          }
+		 
+		/* text shadow */
+		if (currentTheme.commentTurnOffTextShadow == 'true') {
+			$('.commentaries .item .head').css({'text-shadow':'none'});
+		}
      });
      
      $('div#popuper_message_field').live('DOMNodeInserted', function(){
