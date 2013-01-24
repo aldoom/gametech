@@ -2,7 +2,7 @@
 https://github.com/aldoom/gametech/raw/master/NewsCommentsHomerAndSamuraiJack.user.js
 
 1. Для Хрома: 
-Скачать: https://github.com/aldoom/gametech/raw/master/chrome_extension/gametech_4_2_4.crx
+Скачать: https://github.com/aldoom/gametech/raw/master/chrome_extension/gametech_4_2_5.crx
 Перетащить в хром во вкладку расширений (Tools->Extensions / Инструменты->Расширения)
 2. Для Лисы: установить Greasemonkey и далее открыть эту ссылку https://github.com/aldoom/gametech/raw/master/NewsCommentsHomerAndSamuraiJack.user.js
 3. Для оперы: скопировать файл в папку пользовательских скриптов сайта. Узнать где это можно нажав F12, и перейдя на вкладку скрипты.

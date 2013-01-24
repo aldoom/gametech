@@ -5,7 +5,7 @@
 // @author       SamuraiJack & PigForHomer
 // @description  SamuraiJack & PigForHomer: Удобные новости, красивые комментарии, читабельный текст.
 //               Полный список новостей на главной странице.
-// @version     4.2.4
+// @version     4.2.5
 // ==/UserScript==
 
 try{
@@ -395,7 +395,8 @@ function main() {
 			commentTurnOffTextShadow: 'true',
             commentRateColorType: 'color',
             commentUpRateColor: '#B3F3B3',
-            commentDownRateColor: '#F3B3B3'
+            commentDownRateColor: '#F3B3B3',
+            turnOffLastComments: "false"
         },
 		defaultGradientTheme = {
             name: 'Theme Complex Gradient',
@@ -411,7 +412,8 @@ function main() {
 			commentTurnOffTextShadow: 'true',
             commentRateColorType: 'color',
             commentUpRateColor: '#B3F3B3',
-            commentDownRateColor: '#F3B3B3'
+            commentDownRateColor: '#F3B3B3',
+            turnOffLastComments: "false"
         },
         SJTheme = {
             name: 'Theme SamuraiJack',
@@ -427,7 +429,8 @@ function main() {
 			commentTurnOffTextShadow: 'true',
             commentRateColorType: 'color',
             commentUpRateColor: '#B3F3B3',
-            commentDownRateColor: '#F3B3B3'
+            commentDownRateColor: '#F3B3B3',
+            turnOffLastComments: "false"
         },
         cookieCurrentTheme = 'gt-current-theme',
         cookieStoredThemes = 'gt-stored-themes',
@@ -506,7 +509,8 @@ function main() {
 				commentTurnOffTextShadow: settingsBlock.find('#gt-comments-turn-off-text-shadow').val(),
                 commentRateColorType: settingsBlock.find('#gt-comments-rate-color-type').val(),
                 commentUpRateColor: settingsBlock.find('#gt-comments-up-rate-color').val(),
-                commentDownRateColor: settingsBlock.find('#gt-comments-down-rate-color').val()
+                commentDownRateColor: settingsBlock.find('#gt-comments-down-rate-color').val(),
+                turnOffLastComments: settingsBlock.find('#gt-turn-off-last-comments').val()
             };
             
             var isStored = false;
@@ -526,7 +530,8 @@ function main() {
                         themeToSave.commentTurnOffTextShadow != defaultTheme.commentTurnOffTextShadow ||
                         themeToSave.commentRateColorType != defaultTheme.commentRateColorType ||
                         themeToSave.commentUpRateColor != defaultTheme.commentUpRateColor ||
-                        themeToSave.commentDownRateColor != defaultTheme.commentDownRateColor
+                        themeToSave.commentDownRateColor != defaultTheme.commentDownRateColor ||
+                        themeToSave.turnOffLastComments != defaultTheme.turnOffLastComments
                         )
                 ) 
                 || 
@@ -544,7 +549,8 @@ function main() {
                         themeToSave.commentTurnOffTextShadow != SJTheme.commentTurnOffTextShadow ||
                         themeToSave.commentRateColorType != SJTheme.commentRateColorType ||
                         themeToSave.commentUpRateColor != SJTheme.commentUpRateColor ||
-                        themeToSave.commentDownRateColor != SJTheme.commentDownRateColor
+                        themeToSave.commentDownRateColor != SJTheme.commentDownRateColor ||
+                        themeToSave.turnOffLastComments != SJTheme.turnOffLastComments
                         )
                 )
                 || 
@@ -562,7 +568,8 @@ function main() {
                         themeToSave.commentTurnOffTextShadow != defaultGradientTheme.commentTurnOffTextShadow ||
                         themeToSave.commentRateColorType != defaultGradientTheme.commentRateColorType ||
                         themeToSave.commentUpRateColor != defaultGradientTheme.commentUpRateColor ||
-                        themeToSave.commentDownRateColor != defaultGradientTheme.commentDownRateColor
+                        themeToSave.commentDownRateColor != defaultGradientTheme.commentDownRateColor ||
+                        themeToSave.turnOffLastComments != defaultGradientTheme.turnOffLastComments
                         )
                 )
                 ) {
@@ -635,6 +642,11 @@ function main() {
                 if (typeof theme.commentDownRateColor == 'undefined') {
                     theme.commentDownRateColor = defaultTheme.commentDownRateColor;
                 }
+                
+                if (typeof theme.turnOffLastComments == 'undefined') {
+                    theme.turnOffLastComments = defaultTheme.turnOffLastComments;
+                }
+                
             } else {
                 theme = defaultTheme;
             }
@@ -727,6 +739,10 @@ function main() {
             
             settingsBlock.append('<div style="font: 12px bold;">Тип рейтингов комментариев</div>');
             settingsBlock.append(composeSelect('gt-comments-rate-color-type',[{value:"default", text:'по умочанию'},{value:"color", text:'цветной'},{value:"hidden", text:'не показывать'}],(typeof currentTheme.commentRateColorType == 'undefined' ? defaultTheme.commentRateColorType : currentTheme.commentRateColorType)));
+            
+            settingsBlock.append('<div style="font: 12px bold;">Последние комментарии</div>');
+            settingsBlock.append(composeSelect('gt-turn-off-last-comments',[{value:"true", text:'выключены'},{value:"false", text:'включены'}],(typeof currentTheme.turnOffLastComments == 'undefined' ? defaultTheme.turnOffLastComments : currentTheme.turnOffLastComments)));
+            
             /*
             settingsBlock.append('<div style="font: 12px bold;">Цвет высокого рейтинга</div>');
             settingsBlock.append('<input type="text" name="gt-comments-up-rate-color" id="gt-comments-up-rate-color" value="'+(typeof currentTheme.commentUpRateColor == 'undefined' ? defaultTheme.commentUpRateColor : currentTheme.commentUpRateColor)+'" style="width:100%;" />');
@@ -811,6 +827,9 @@ function main() {
                         $('.user_theme_settings #gt-comments-down-rate-color').val(currentTheme.commentDownRateColor);
                     }
                     
+                    if (typeof currentTheme.turnOffLastComments != 'undefined') {
+                        $('.user_theme_settings #gt-turn-off-last-comments').val(currentTheme.turnOffLastComments);
+                    }
                 }
             });
             
@@ -1020,13 +1039,14 @@ position: relative;}');
         });
     }
     
- if (!(window.location=='http://www.gametech.ru/')){
-    var ourTableShortList=$('table.news_shortlist');
-    var startPositionForRightNews=$('div.user_logined_block')[0] || $('div.auth_actions')[0];
-    $('#ri_reviews').insertAfter(startPositionForRightNews);
-    ourTableShortList.insertAfter(startPositionForRightNews);
-    $('h2.news').css({'color':'#487099', 'text-decoration':'underline'}).insertAfter(startPositionForRightNews);
-    ourTableShortList.find('tr td:first-child').remove();
+if (!(window.location=='http://www.gametech.ru/')){
+    $(window).load(function(){
+        var ourTableShortList=$('table.news_shortlist');
+        var startPositionForRightNews=$('div.user_theme_block')[0] || $('div.user_logined_block')[0] || $('div.auth_actions')[0];
+        $('#ri_reviews').insertAfter(startPositionForRightNews);
+        ourTableShortList.insertAfter(startPositionForRightNews);
+        $('h2.news').css({'color':'#487099', 'text-decoration':'underline'}).insertAfter(startPositionForRightNews);
+        ourTableShortList.find('tr td:first-child').remove();
         var linkInTableTd=ourTableShortList.find('tr td a');
         for(var i=0;i<linkInTableTd.length;i++){
             if(linkInTableTd[i].href==window.location){
@@ -1039,6 +1059,13 @@ position: relative;}');
         for(var j=0;j<spanInTableTd.length;j++){
             spanInTableTd[j].setAttribute('style','padding:0px');
         }
+        
+        if (currentTheme.turnOffLastComments != "true") {
+            window.prepareComments();
+            window.lastCommentsShow();
+            window.lastCommentsReviewsTableShow();
+        }
+    });
 
     function spacesForTags(txt){
         txt.replace("<b>", " <b>");
@@ -1084,26 +1111,26 @@ position: relative;}');
     $('.news_list .item h3').css({'font-size':currentTheme.newsTextSizeHeader+'px','font-weight':'bold'});
     $('div.g960').css({'background': '#F9FBFB','font-family':currentTheme.fontFamily});
     $('.news_list .commentaries .item div.spoiler').css('background', '#F9FBFB');
-     $('.news_list .item .clear').css({'border': 'none'});
-     $('.news_list .item div.offtopic').css({'font-size': currentTheme.commentOfftopicTextSize+'px !important'});
-     $('.news_list .item div.offtopic .reply, .news_list .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'border': 'none !important'});
-     $('.news_list .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'color':'#444444'});
-     $('.commentaries .item .head .username').css({'padding-left':'60px','display':'inline-block','padding-top':'0px'});
-     $('.commentaries .item .body .reply').css({'margin':'0px','borderRadius':'3px'});
-     $('div.offtopic').css({'background-color':'#EDEDED','border':'1px solid #CDCDCD','color':'#ADADAD','padding':'2px'}).removeClass('offtopic');
-     //$('.commentaries .item .body noindex, .commentaries .item .body b, .commentaries .item .body i').css({'padding':'5px'});
-     //$('.commentaries .item .body').each(function(){var txt = $(this).html();spacesForTags(txt);});
-     //$('.comment_user_text').each(function(){var txt = $(this).html();spacesForTags(txt);});
+    $('.news_list .item .clear').css({'border': 'none'});
+    $('.news_list .item div.offtopic').css({'font-size': currentTheme.commentOfftopicTextSize+'px !important'});
+    $('.news_list .item div.offtopic .reply, .news_list .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'border': 'none !important'});
+    $('.news_list .item div.offtopic .reply b, .news_list .item div.offtopic .reply a').css({'color':'#444444'});
+    $('.commentaries .item .head .username').css({'padding-left':'60px','display':'inline-block','padding-top':'0px'});
+    $('.commentaries .item .body .reply').css({'margin':'0px','borderRadius':'3px'});
+    $('div.offtopic').css({'background-color':'#EDEDED','border':'1px solid #CDCDCD','color':'#ADADAD','padding':'2px'}).removeClass('offtopic');
+    //$('.commentaries .item .body noindex, .commentaries .item .body b, .commentaries .item .body i').css({'padding':'5px'});
+    //$('.commentaries .item .body').each(function(){var txt = $(this).html();spacesForTags(txt);});
+    //$('.comment_user_text').each(function(){var txt = $(this).html();spacesForTags(txt);});
+
+    $('.news_shortlist a').css({'font-size':'12px'});
+    $('.right_block_content div.item a, .right_block_content h3 a').css({'font-size':'12px'});
+
+    /* spoiler div styles*/
+    $('div.spoiler').css({'font-size':currentTheme.commentSpoilerTextSize+'px'});
      
-     $('.news_shortlist a').css({'font-size':'12px'});
-     $('.right_block_content div.item a, .right_block_content h3 a').css({'font-size':'12px'});
-     
-     /* spoiler div styles*/
-     $('div.spoiler').css({'font-size':currentTheme.commentSpoilerTextSize+'px'});
-     
-     /* rate type */
-     if (currentTheme.commentRateColorType == 'color') {
-         $('.commentaries .item .head').each(function(){
+    /* rate type */
+    if (currentTheme.commentRateColorType == 'color') {
+        $('.commentaries .item .head').each(function(){
              var ratingVal = $(this).find('.comment_rating .cr_value').html();
              ratingVal = parseInt(ratingVal);
              var calcRat = ratingVal;
@@ -1211,13 +1238,15 @@ position: relative;}');
         }
     });
     
-    window.prepareComments();
-    window.lastCommentsShow();
-	window.lastCommentsReviewsTableShow();
- }
- else {
+    /**
+     * закоменчены
+     */
+    //window.prepareComments();
+    //window.lastCommentsShow();
+	//window.lastCommentsReviewsTableShow();
+ } else {
      $('div.g960').css({'background': '#F9FBFB','font-family':currentTheme.fontFamily,'font-size':'12px'});
-     $('div.left_col table.news_shortlist').load('http://www.gametech.ru/news/26889/ table.news_shortlist>tbody', function(res){
+     $('div.left_col table.news_shortlist').load('http://www.gametech.ru/cgi-bin/ajaxhtml.pl?div_selected=news div#fresh_news_bottom table.news_shortlist>tbody', function(res){
          window.prepareComments();
          window.lastCommentsShow();
 		 window.lastCommentsReviewsTableShow();

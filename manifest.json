@@ -1,6 +1,6 @@
 {
 	"name": "Gametech Community Style",
-	"version": "4.2.4",
+	"version": "4.2.5",
 	"description": "SamuraiJack & PigForHomer: Удобные новости, красивые комментарии, читабельный текст. Полный список новостей на главной странице.",
 	"background" : { "scripts": ["background.js"] },
 	"page_action" :
