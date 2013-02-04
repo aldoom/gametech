@@ -5,7 +5,7 @@
 // @author       SamuraiJack & PigForHomer
 // @description  SamuraiJack & PigForHomer: Удобные новости, красивые комментарии, читабельный текст.
 //               Полный список новостей на главной странице.
-// @version     4.2.5
+// @version     4.2.6.1
 // ==/UserScript==
 
 try{
@@ -882,7 +882,7 @@ position: relative;}');
     var currentTheme = gtnamespace.theme.getCurrentTheme();
     
     window.prepareComments = function() {
-        $('table.news_shortlist a, div.news_list .item h3 a, #ri_news .item h3 a, #ri_reviews .item h3 a, div.articles_list .item h3 a:not(.parent)').each(function(){
+        $('table.news_shortlist.gcs-news-table a, div.news_list .item h3 a, #ri_news .item h3 a, #ri_reviews .item h3 a, div.articles_list .item h3 a:not(.parent)').each(function(){
             var self = $(this);
             if (self.data('gsc_comments_on')) {
                 return true;
@@ -919,7 +919,7 @@ position: relative;}');
   
     /* last comment in our news table*/
     window.lastCommentsShow = function(onNewsPage) {
-        $('table.news_shortlist a, div.news_list .item h3 a, #ri_news .item h3 a').each(function(){
+        $('table.news_shortlist.gcs-news-table a, div.news_list .item h3 a, #ri_news .item h3 a').each(function(){
             var self = $(this);
             var newsId = self.attr('href');
             if (newsId.indexOf("comments_block") == -1) {
@@ -952,6 +952,11 @@ position: relative;}');
                             userName = userName.html();
                             if (userName != null) {
                                 if (onNewsPage) {
+                                    if (!self.data('gsc_comments_on')) {
+                                        self.data('gsc_comments_on',1);
+                                        var commentStringS = $('<span></span>').attr('class', 'gcs_comments').css('display', 'block').html('&nbsp;');
+                                        self.parents('.item').append(commentStringS);
+                                    }
                                     var commentTime = lastComment.find('span.date').html();
 
                                     var commentString = '<span style="display:block;color:#5D5D5D;">Последний комментарий от '+userName+' '+commentTime+'</span>';
@@ -1040,7 +1045,42 @@ position: relative;}');
     }
     
 if (!(window.location=='http://www.gametech.ru/')){
-    $(window).load(function(){
+    $(document).ready(function(){
+        if (window.location.pathname != '/news/') {
+            $.ajax({
+                url: "/cgi-bin/ajaxhtml.pl",data: {div_selected: "news"},								cache: true,
+                type: "GET",
+                dataType: "html",
+                success: function(curr_data, stat, xhr){
+                    var ourTableShortList=$('div#fresh_news_bottom', curr_data);
+                    var startPositionForRightNews=$('div.user_theme_block')[0] || $('div.user_logined_block')[0] || $('div.auth_actions')[0];
+                    $('#ri_reviews').insertAfter(startPositionForRightNews);
+                    ourTableShortList.find('table.news_shortlist').addClass('gcs-news-table');
+                    ourTableShortList.insertAfter(startPositionForRightNews);
+                    //$('h2.news').css({'color':'#487099', 'text-decoration':'underline'}).insertAfter(startPositionForRightNews);
+                    ourTableShortList.find('tr td:first-child').remove();
+                    var linkInTableTd=ourTableShortList.find('tr td a');
+                    for(var i=0;i<linkInTableTd.length;i++){
+                        if(linkInTableTd[i].href==window.location){
+                            linkInTableTd[i].parentNode.setAttribute('style','padding:5px; background:#48a2de;border-radius:5px;');
+                            linkInTableTd[i].setAttribute('style','color:white;text-decoration:none')
+                        }
+                    }
+                    var spanInTableTd=ourTableShortList.find('span.comments');
+                    spanInTableTd.find('i').remove();
+                    for(var j=0;j<spanInTableTd.length;j++){
+                        spanInTableTd[j].setAttribute('style','padding:0px');
+                    }
+
+                    if (currentTheme.turnOffLastComments != "true") {
+                        window.prepareComments();
+                        window.lastCommentsShow();
+                        window.lastCommentsReviewsTableShow();
+                    }
+                }
+            });
+        }
+        /*
         var ourTableShortList=$('table.news_shortlist');
         var startPositionForRightNews=$('div.user_theme_block')[0] || $('div.user_logined_block')[0] || $('div.auth_actions')[0];
         $('#ri_reviews').insertAfter(startPositionForRightNews);
@@ -1065,6 +1105,7 @@ if (!(window.location=='http://www.gametech.ru/')){
             window.lastCommentsShow();
             window.lastCommentsReviewsTableShow();
         }
+        */
     });
 
     function spacesForTags(txt){
@@ -1247,9 +1288,12 @@ if (!(window.location=='http://www.gametech.ru/')){
  } else {
      $('div.g960').css({'background': '#F9FBFB','font-family':currentTheme.fontFamily,'font-size':'12px'});
      $('div.left_col table.news_shortlist').load('http://www.gametech.ru/cgi-bin/ajaxhtml.pl?div_selected=news div#fresh_news_bottom table.news_shortlist>tbody', function(res){
-         window.prepareComments();
-         window.lastCommentsShow();
-		 window.lastCommentsReviewsTableShow();
+        $('div.left_col table.news_shortlist').addClass('gcs-news-table');
+        if (currentTheme.turnOffLastComments != "true") {
+            window.prepareComments();
+            window.lastCommentsShow();
+            window.lastCommentsReviewsTableShow();
+        }
      });
      $('div.more_news').remove();
      $('div.breadcrumbs').remove();
