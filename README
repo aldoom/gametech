@@ -1,8 +1,25 @@
-Как сделать этот сайт гостеприимнее до прихода Д’Артаньяна? Легко!
-https://github.com/aldoom/gametech/raw/master/NewsCommentsHomerAndSamuraiJack.user.js
+Визуальное и функциональное улучшение сайта www.gametech.ru от SamuraiJack.
+Изменен вид комментариев.
+Добавлена возможности:
+ - изменять шрифт
+ - размер в шрифта заголовка новости
+ - размер в шрифта текста новости
+ - размер в шрифта текста комментария
+ - размер в шрифта оффтопика комментария
+ - размер в шрифта спойлера комментария
+ - градиент в заголовке комментария
+ - задавать цвет начала и конеца градиента
+ - тень от текста в загаловке комментария (выключена, включена)
+ - тип рейтингов комментариев (по умолчанию, цветной, не показывать)
+ - последние комментарии у новостей и статей (включены, выключены)
+
+Настройки можно осуществлять, нажав на желтый блок "Theme ..." под блоком авторизации.
+
+https://github.com/aldoom/gametech/raw/master/NewsCommentsSamuraiJack.user.js
 
 1. Для Хрома: 
-Скачать: https://github.com/aldoom/gametech/raw/master/chrome_extension/gametech_4_2_6_1.crx
-Перетащить в хром во вкладку расширений (Tools->Extensions / Инструменты->Расширения)
-2. Для Лисы: установить Greasemonkey и далее открыть эту ссылку https://github.com/aldoom/gametech/raw/master/NewsCommentsHomerAndSamuraiJack.user.js
-3. Для оперы: скопировать файл в папку пользовательских скриптов сайта. Узнать где это можно нажав F12, и перейдя на вкладку скрипты.
+https://chrome.google.com/webstore/detail/gametech-community-style/pcdiidaafknmcoohkafelficfekomlkf
+
+2. Для Лисы: установить Greasemonkey и далее открыть эту ссылку https://github.com/aldoom/gametech/raw/master/NewsCommentsSamuraiJack.user.js
+
+3. Для оперы: скопировать файл в папку пользовательских скриптов сайта. Узнать где это можно нажав F12, находясь на странице http://www.gametech.ru/ , и перейдя на вкладку скрипты.
