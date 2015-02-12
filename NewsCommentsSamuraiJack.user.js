@@ -1,11 +1,11 @@
-// ==UserScript==
+﻿// ==UserScript==
 // @name         Gametech Community Style
 // @namespace    http://github.com/aldoom/gametech
 // @include      http://www.gametech.ru/*
 // @author       SamuraiJack
 // @description  SamuraiJack: Удобные новости, красивые комментарии, читабельный текст.
 //               Полный список новостей на главной странице.
-// @version     4.2.6.3
+// @version     4.2.6.4
 // ==/UserScript==
 
 try{
@@ -656,7 +656,7 @@ function main() {
 		
 		constructor.prototype.getCurrentTheme = function() {
 			var currentTheme = gtnamespace.cookies.get(cookieCurrentTheme);
-			if (currentTheme == null) {
+			if (currentTheme == null || currentTheme == '') {
 				return defaultTheme;
 			} else {
 				currentTheme = checkNewFields(currentTheme);
@@ -1378,6 +1378,7 @@ div.spoiler {font-size: '+currentTheme.commentSpoilerTextSize+'px !important;}\n
  }
  
 if (window.location.pathname == '/news/') {
+	window.prepareComments();
 	window.lastCommentsShow(true);
 }
 
