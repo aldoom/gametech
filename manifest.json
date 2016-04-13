@@ -1,7 +1,7 @@
 {
 	"name": "Gametech Community Style",
-	"version": "4.2.6.4",
-	"description": "SamuraiJack: Удобные новости, красивые комментарии, читабельный текст. Полный список новостей на главной странице.",
+	"version": "4.2.6.6",
+	"description": "SamuraiJack: Удобные новости, красивые комментарии, читабельный текст, исправление багов GT. Полный список новостей на главной странице.",
 	"background" : { "scripts": ["background.js"] },
 	"page_action" :
 	{

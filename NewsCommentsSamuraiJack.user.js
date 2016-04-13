@@ -1,11 +1,11 @@
-﻿// ==UserScript==
+// ==UserScript==
 // @name         Gametech Community Style
 // @namespace    http://github.com/aldoom/gametech
 // @include      http://www.gametech.ru/*
 // @author       SamuraiJack
 // @description  SamuraiJack: Удобные новости, красивые комментарии, читабельный текст.
 //               Полный список новостей на главной странице.
-// @version     4.2.6.4
+// @version     4.2.6.6
 // ==/UserScript==
 
 try{
@@ -1333,7 +1333,7 @@ div.spoiler {font-size: '+currentTheme.commentSpoilerTextSize+'px !important;}\n
 		$('.comment_user_text div.offtopic').removeClass('offtopic').addClass('offtopic_cs');
 	});
 
-		var ourCommunityPic_1='http://www.gametech.ru/userpics/11097/upload/editor_buttons.png';
+		var ourCommunityPic_1='http://www.gametech.ru/userpics/717497/upload/editor_buttons.png';
 		$.ajax({
 			url:ourCommunityPic_1,
 			type:'HEAD',
@@ -1347,6 +1347,9 @@ div.spoiler {font-size: '+currentTheme.commentSpoilerTextSize+'px !important;}\n
 		});
 
 	$('div.comment_content').live('DOMNodeInserted', function(ev){
+		/**
+		 * Блок редактирования комментария - чиним https + вставка в нужное окно
+		 */
 	   if($('.comment_update').length > 0){
 			$('.comment_update .tb_href').attr('onclick',"window.ixbtstyleSJ(4, 'commentUpd');");
 			$('.comment_update').parent('div').parent('div').find('#url_c').find('input[name="confirm"]').attr('onclick',"window.check_url_tagSJ('commentUpd');");
@@ -1354,6 +1357,41 @@ div.spoiler {font-size: '+currentTheme.commentSpoilerTextSize+'px !important;}\n
 			$('.comment_update .button_send').css({'background-position':'0 -30px','color':'#FFFFFF', 'cursor':'pointer'});
 			$('.comment_update .button_cancel').css({'cursor':'pointer'});
 		}
+	});
+	
+	$('div#comments_block_place').live('DOMNodeInserted', function(ev){
+		/**
+		 * Блок добавления комментария - чиним https + вставка в нужное окно
+		 */
+		if($('.comment_tools:not(.gcs_comment_tools)').length > 0){
+			$('.comment_tools:not(.gcs_comment_tools)').each(function(){
+				var self = $(this);
+				if ($('form.comment_update', self).length == 0) {
+					$('.tb_href', self).attr('onclick',"window.ixbtstyleSJ(4, 'comment');");
+					self.parent('div').find('#url_c').find('input[name="confirm"]').attr('onclick',"window.check_url_tagSJ('comment');");
+					self.parent('div').find('#url_c').find('input[name="cancle"]').attr('onclick',"window.close_url_tagSJ('comment');");
+					$('.button_send', self).css({'background-position':'0 -30px','color':'#FFFFFF', 'cursor':'pointer'});
+					self.addClass('gcs_comment_tools');
+				}
+			});
+		}
+		
+		/**
+		 * чиним https в комментах, кто без плагина
+		 */
+		$('.body.comment_content').each(function(){
+			var self = $(this);
+			$('a[href^="http://https://"]', self).each(function(){
+				var hrefTMP = this.href;
+				hrefTMP = hrefTMP.replace('http://https://', 'https://');
+				this.href = hrefTMP;
+			});
+			$('a[href^="http://https//"]', self).each(function(){
+				var hrefTMP = this.href;
+				hrefTMP = hrefTMP.replace('http://https//', 'https://');
+				this.href = hrefTMP;
+			});
+		});
 	});
 	
 	/**
@@ -1401,8 +1439,9 @@ if (window.location.pathname == '/news/') {
 			return;
 		}
 		if(bbnumber == 4){
-			var ctr_form = $('.comment_update').parent('div').parent('div').find('#url_c').get(0);
-			
+			var jq_selector = '#'+name;
+			var ctr_form = $(jq_selector).parent('form').parent('div').parent('div').find('#url_c').get(0);
+			//var ctr_form = $('.comment_update').parent('div').parent('div').find('#url_c');
 			// Если фрагмент текста был выделен, то добавляем его в виде названия ссылки
 			var theSelection = '';
 
@@ -1414,10 +1453,13 @@ if (window.location.pathname == '/news/') {
 				theSelection = mozExtractSelection(txtarea);
 			}
 
-			if(theSelection.indexOf('http://') == -1){
+			if(theSelection.indexOf('http://') == -1 && theSelection.indexOf('https://') == -1){
 				$(ctr_form).find('#url_title').val(theSelection);
 				$(ctr_form).find('#url_href').val('');
 			}else{
+				if (theSelection.indexOf('https://') !== -1) {
+					theSelection = theSelection.replace('https://', 'http://');
+				}
 				$(ctr_form).find('#url_title').val(theSelection);
 				$(ctr_form).find('#url_href').val(theSelection);
 			}
@@ -1439,7 +1481,9 @@ if (window.location.pathname == '/news/') {
 	};
 	
 	window.check_url_tagSJ = function(name){
-		var ctr_form = $('.comment_update').parent('div').parent('div').find('#url_c');
+		var jq_selector = '#'+name;
+		var ctr_form = $(jq_selector).parent('form').parent('div').parent('div').find('#url_c');
+		//var ctr_form = $('.comment_update').parent('div').parent('div').find('#url_c');
 		var href = ctr_form.find('#url_href').get(0);
 		var title = ctr_form.find('#url_title').get(0);
 		var result = '';
@@ -1450,8 +1494,11 @@ if (window.location.pathname == '/news/') {
 			if(!title.value && href.value){
 				title.value = href.value;
 			}
-			if(!href.value.match('http://')){
+			if(!href.value.match('http://') && !href.value.match('https://')){
 				href.value = 'http://' + href.value;
+			}
+			if(href.value.match('https://')) {
+				href.value = href.value.replace('https://','http://');
 			}
 			result = '[url href=' + href.value + ']' + title.value+ '[/url]';
 		}
@@ -1495,7 +1542,9 @@ if (window.location.pathname == '/news/') {
 	};
 	
 	window.close_url_tagSJ = function(name){
-		var ctr_form = $('.comment_update').parent('div').parent('div').find('#url_c');
+		var jq_selector = '#'+name;
+		var ctr_form = $(jq_selector).parent('form').parent('div').parent('div').find('#url_c');
+		//var ctr_form = $('.comment_update').parent('div').parent('div').find('#url_c');
 		ctr_form.find('#url_href').val('');
 		ctr_form.find('#url_title').val('');
 
